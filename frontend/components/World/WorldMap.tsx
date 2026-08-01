@@ -156,17 +156,43 @@ export default function WorldMap() {
               placeholder:text-white/40
               focus:border-[#2E6F57]
             "
-            disabled
           />
         </div>
 
-        <div className="mt-8 flex-1 rounded-2xl border border-dashed border-white/10 p-5">
+        <div className="mt-8 grid grid-cols-2 gap-3">
+          <div className="rounded-2xl bg-[#2E6F57]/20 p-4">
+            <p className="text-xs uppercase tracking-wider text-white/50">
+              Countries
+            </p>
+            <p className="mt-2 text-3xl font-light">
+              258
+            </p>
+          </div>
+
+          <div className="rounded-2xl bg-[#2E6F57]/20 p-4">
+            <p className="text-xs uppercase tracking-wider text-white/50">
+              Selected
+            </p>
+            <p className="mt-2 text-3xl font-light">
+              0
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 flex-1 rounded-2xl border border-dashed border-white/10 p-5">
           <p className="text-sm uppercase tracking-[0.25em] text-white/40">
             Country Preview
           </p>
 
-          <div className="mt-8 flex h-full items-center justify-center text-center text-white/50">
-            Select a country to preview it here.
+          <div className="mt-6">
+            <h4 className="text-xl font-light">
+              Select a Country
+            </h4>
+
+            <p className="mt-3 text-sm leading-7 text-white/60">
+              Hovering and clicking countries will populate this panel in the
+              next feature.
+            </p>
           </div>
         </div>
       </aside>
