@@ -1,16 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function ContinueButton() {
+  const router = useRouter();
+
   return (
-    <motion.button
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        delay: 0.6,
-        duration: 0.8,
-      }}
+    <button
+      onClick={() => router.push("/dashboard")}
       className="
         mt-16
         rounded-full
@@ -27,6 +24,6 @@ export default function ContinueButton() {
       "
     >
       Continue
-    </motion.button>
+    </button>
   );
 }
