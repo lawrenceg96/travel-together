@@ -1,60 +1,91 @@
 import DashboardLayout from "@/components/Dashboard/DashboardLayout";
 import DashboardCard from "@/components/Dashboard/DashboardCard";
+import Link from "next/link";
+
+import { trips } from "@/data/trips";
 
 export default function DashboardPage() {
+  const nextTrip = trips[0];
+
   return (
     <DashboardLayout>
 
-      <>
-  <h2 className="text-5xl font-light">
-    Welcome back 👋
-  </h2>
+      <h1 className="font-benguiat text-5xl uppercase tracking-[0.08em]">
+        Dashboard
+      </h1>
 
-  <p className="mt-4 text-white/60">
-    Where would you like to begin?
-  </p>
+      <p className="mt-4 text-white/60">
+        Welcome back. Ready for your next adventure?
+      </p>
 
-  <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      {/* Continue Planning */}
 
-    <DashboardCard
-      emoji="🛂"
-      title="Passport"
-      description="Choose countries you'd both love to visit."
-      href="/passport"
-    />
+      <div className="mt-10 rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-600/15 to-transparent p-8">
 
-    <DashboardCard
-      emoji="🌍"
-      title="World"
-      description="Browse the interactive world map."
-    />
+        <p className="text-sm uppercase tracking-[0.25em] text-emerald-300">
+          Continue Planning
+        </p>
 
-    <DashboardCard
-      emoji="📖"
-      title="Journal"
-      description="Keep notes, ideas and plans."
-    />
+        <h2 className="mt-4 font-benguiat text-5xl uppercase">
+          {nextTrip.title}
+        </h2>
 
-    <DashboardCard
-      emoji="📸"
-      title="Memories"
-      description="Your favourite trips together."
-    />
+        <p className="mt-3 text-white/70">
+          {nextTrip.startDate} — {nextTrip.endDate}
+        </p>
 
-    <DashboardCard
-      emoji="❤️"
-      title="Wishlist"
-      description="Places you've both matched on."
-    />
+        <Link
+          href={`/trips/${nextTrip.id}`}
+          className="
+            mt-8
+            inline-flex
+            rounded-2xl
+            bg-emerald-600
+            px-6
+            py-3
+            font-medium
+            transition
+            hover:bg-emerald-500
+          "
+        >
+          Continue Trip →
+        </Link>
 
-    <DashboardCard
-      emoji="⚙️"
-      title="Settings"
-      description="Personalise your experience."
-    />
+      </div>
 
-  </div>
-</>
+      {/* Quick Access */}
+
+      <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+
+        <DashboardCard
+          emoji="🛂"
+          title="Passport"
+          description="Explore countries."
+          href="/passport"
+        />
+
+        <DashboardCard
+          emoji="✈️"
+          title="Trips"
+          description="Manage your holidays."
+          href="/trips"
+        />
+
+        <DashboardCard
+          emoji="❤️"
+          title="Wishlist"
+          description="Places you've saved."
+          href="/wishlist"
+        />
+
+        <DashboardCard
+          emoji="📖"
+          title="Journal"
+          description="Travel memories."
+          href="/journal"
+        />
+
+      </div>
 
     </DashboardLayout>
   );

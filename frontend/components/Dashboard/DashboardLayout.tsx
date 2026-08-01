@@ -1,6 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { ReactNode } from "react";
+import { usePathname } from "next/navigation";
+
+import {
+  LayoutDashboard,
+  Plane,
+  Globe2,
+  BookOpen,
+  Images,
+  Heart,
+  Settings,
+} from "lucide-react";
 
 type DashboardLayoutProps = {
   children: ReactNode;
@@ -12,22 +24,38 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-[#090909] text-white">
 
-      <header className="border-b border-white/10">
+      {/* Header */}
+
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090909]/90 backdrop-blur-xl">
 
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-8">
 
-          <h1
-            className="text-3xl"
-            style={{
-              fontFamily: "serif",
-            }}
-          >
-            Ciara & Lawrence's Holiday Planner
-          </h1>
+          <Link href="/dashboard">
 
-          <button className="text-2xl">
-            ⚙️
-          </button>
+            <h1 className="font-benguiat text-3xl uppercase tracking-[0.08em]">
+              Ciara & Lawrence&apos;s
+            </h1>
+
+          </Link>
+
+          <Link
+            href="/settings"
+            className="
+              flex
+              h-12
+              w-12
+              items-center
+              justify-center
+              rounded-full
+              border
+              border-white/10
+              transition
+              hover:border-emerald-500
+              hover:bg-white/5
+            "
+          >
+            <Settings size={20} />
+          </Link>
 
         </div>
 
@@ -35,21 +63,84 @@ export default function DashboardLayout({
 
       <div className="mx-auto flex max-w-7xl">
 
-        <aside className="w-64 border-r border-white/10 p-6">
+        {/* Sidebar */}
 
-          <nav className="space-y-3">
+        <aside
+          className="
+            sticky
+            top-20
+            h-[calc(100vh-80px)]
+            w-72
+            border-r
+            border-white/10
+            bg-white/[0.02]
+            backdrop-blur-xl
+          "
+        >
 
-            <SidebarItem icon="🏠" text="Dashboard" />
-            <SidebarItem icon="🛂" text="Passport" />
-            <SidebarItem icon="🌍" text="World" />
-            <SidebarItem icon="📖" text="Journal" />
-            <SidebarItem icon="📸" text="Memories" />
-            <SidebarItem icon="❤️" text="Wishlist" />
-            <SidebarItem icon="⚙️" text="Settings" />
+          <div className="p-6">
 
-          </nav>
+            <p className="mb-6 text-xs uppercase tracking-[0.35em] text-white/40">
+              Navigation
+            </p>
+
+            <nav className="space-y-2">
+
+              <SidebarItem
+                href="/dashboard"
+                icon={<LayoutDashboard size={20} />}
+                text="Dashboard"
+              />
+
+              <SidebarItem
+                href="/passport"
+                icon={<BookOpen size={20} />}
+                text="Passport"
+              />
+
+              <SidebarItem
+                href="/trips"
+                icon={<Plane size={20} />}
+                text="Trip Planner"
+              />
+
+              <SidebarItem
+                href="/world"
+                icon={<Globe2 size={20} />}
+                text="World"
+              />
+
+              <SidebarItem
+                href="/journal"
+                icon={<BookOpen size={20} />}
+                text="Journal"
+              />
+
+              <SidebarItem
+                href="/memories"
+                icon={<Images size={20} />}
+                text="Memories"
+              />
+
+              <SidebarItem
+                href="/wishlist"
+                icon={<Heart size={20} />}
+                text="Wishlist"
+              />
+
+              <SidebarItem
+                href="/settings"
+                icon={<Settings size={20} />}
+                text="Settings"
+              />
+
+            </nav>
+
+          </div>
 
         </aside>
+
+        {/* Main Content */}
 
         <main className="flex-1 p-10">
           {children}
@@ -61,31 +152,78 @@ export default function DashboardLayout({
   );
 }
 
+type SidebarItemProps = {
+  href: string;
+  icon: ReactNode;
+  text: string;
+};
+
 function SidebarItem({
+  href,
   icon,
   text,
-}: {
-  icon: string;
-  text: string;
-}) {
-  return (
-    <button
-      className="
-        flex
-        w-full
-        items-center
-        gap-3
-        rounded-xl
-        px-4
-        py-3
-        text-left
-        transition
-        hover:bg-white/5
-      "
-    >
-      <span>{icon}</span>
+}: SidebarItemProps) {
+  const pathname = usePathname();
 
-      <span>{text}</span>
-    </button>
+  const active =
+    pathname === href ||
+    (href !== "/dashboard" && pathname.startsWith(href));
+
+  return (
+    <Link
+      href={href}
+      className={`
+        group
+        relative
+        flex
+        items-center
+        gap-4
+        overflow-hidden
+        rounded-2xl
+        px-5
+        py-4
+        transition-all
+        duration-300
+        ${
+          active
+            ? "bg-emerald-600/20 text-white"
+            : "text-white/65 hover:bg-white/5 hover:text-white"
+        }
+      `}
+    >
+
+      {active && (
+        <div
+          className="
+            absolute
+            left-0
+            top-2
+            bottom-2
+            w-1
+            rounded-r-full
+            bg-emerald-500
+          "
+        />
+      )}
+
+      <div
+        className={`
+          transition-transform
+          duration-300
+          ${
+            active
+              ? "text-emerald-400"
+              : "group-hover:scale-110"
+          }
+        `}
+      >
+        {icon}
+      </div>
+
+      <span className="text-[15px] font-medium">
+        {text}
+      </span>
+
+    </Link>
   );
 }
