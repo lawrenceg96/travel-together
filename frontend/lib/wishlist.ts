@@ -1,11 +1,76 @@
+"use client";
+
 export type WishlistItem = {
   id: string;
-  type: "city" | "attraction";
-  referenceId: string;
-  title: string;
-  image: string;
-  country: string;
-  saved: boolean;
+  name: string;
+  type: "country" | "city" | "attraction";
+  image?: string;
 };
 
-export const wishlist: WishlistItem[] = [];
+
+export function getWishlist(): WishlistItem[] {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  const saved = localStorage.getItem("wishlist");
+
+  return saved
+    ? JSON.parse(saved)
+    : [];
+}
+
+
+
+export function addToWishlist(
+  item: WishlistItem
+) {
+
+  const current = getWishlist();
+
+  const exists = current.some(
+    (saved) =>
+      saved.id === item.id &&
+      saved.type === item.type
+  );
+
+
+  if (exists) {
+    return;
+  }
+
+
+  localStorage.setItem(
+    "wishlist",
+    JSON.stringify([
+      ...current,
+      item,
+    ])
+  );
+
+}
+
+
+
+export function removeFromWishlist(
+  id: string,
+  type: WishlistItem["type"]
+) {
+
+  const current = getWishlist();
+
+
+  localStorage.setItem(
+    "wishlist",
+    JSON.stringify(
+      current.filter(
+        (item) =>
+          !(
+            item.id === id &&
+            item.type === type
+          )
+      )
+    )
+  );
+
+}

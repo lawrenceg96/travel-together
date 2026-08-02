@@ -1,112 +1,199 @@
 "use client";
 
-import DashboardLayout from "@/components/Dashboard/DashboardLayout";
-import { useWishlist } from "@/context/WishlistContext";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+
+import {
+  getWishlist,
+  removeFromWishlist,
+  WishlistItem,
+} from "@/lib/wishlist";
+
 
 export default function WishlistPage() {
-  const { items, clear } = useWishlist();
+
+  const [items, setItems] = useState<WishlistItem[]>([]);
+
+
+  useEffect(() => {
+    setItems(getWishlist());
+  }, []);
+
+
+
+  function removeItem(
+    id: string,
+    type: WishlistItem["type"]
+  ) {
+
+    removeFromWishlist(id, type);
+
+    setItems(
+      getWishlist()
+    );
+  }
+
+
 
   return (
-    <DashboardLayout>
+    <main
+      className="
+        min-h-screen
+        bg-[#07141F]
+        p-10
+        text-white
+      "
+    >
 
-      <div className="mb-12 flex items-center justify-between">
+      <div className="mx-auto max-w-6xl">
 
-        <div>
 
-          <h1 className="text-6xl font-light">
-            ❤️ Wishlist
-          </h1>
+        <h1
+          className="
+            text-5xl
+            font-light
+          "
+        >
+          ❤️ My Wishlist
+        </h1>
 
-          <p className="mt-4 text-xl text-white/60">
-            Everything you've saved so far.
-          </p>
 
-        </div>
+        <p
+          className="
+            mt-4
+            text-white/60
+          "
+        >
+          Places you want to explore together.
+        </p>
 
-        {items.length > 0 && (
 
-          <button
-            onClick={clear}
+
+        {items.length === 0 ? (
+
+          <div
             className="
-              rounded-xl
+              mt-10
+              rounded-3xl
               border
-              border-red-500/40
-              px-5
-              py-3
-              text-red-400
-              transition
-              hover:bg-red-500/10
+              border-white/10
+              bg-white/5
+              p-8
+              text-white/50
             "
           >
-            Clear Wishlist
-          </button>
+            Your wishlist is empty.
+          </div>
+
+        ) : (
+
+
+          <div
+            className="
+              mt-10
+              grid
+              gap-6
+              md:grid-cols-2
+              lg:grid-cols-3
+            "
+          >
+
+            {items.map((item) => (
+
+              <div
+                key={`${item.type}-${item.id}`}
+                className="
+                  overflow-hidden
+                  rounded-3xl
+                  border
+                  border-white/10
+                  bg-white/5
+                "
+              >
+
+
+                {item.image && (
+
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="
+                      h-48
+                      w-full
+                      object-cover
+                    "
+                  />
+
+                )}
+
+
+
+                <div className="p-6">
+
+                  <p
+                    className="
+                      text-xs
+                      uppercase
+                      tracking-[0.25em]
+                      text-white/40
+                    "
+                  >
+                    {item.type}
+                  </p>
+
+
+                  <h2
+                    className="
+                      mt-3
+                      text-2xl
+                      font-light
+                    "
+                  >
+                    {item.name}
+                  </h2>
+
+
+
+                  <button
+                    onClick={() =>
+                      removeItem(
+                        item.id,
+                        item.type
+                      )
+                    }
+                    className="
+                      mt-5
+                      rounded-full
+                      border
+                      border-white/20
+                      px-5
+                      py-2
+                      text-sm
+                      text-white/70
+                      transition
+                      hover:bg-white/10
+                    "
+                  >
+                    Remove
+                  </button>
+
+
+                </div>
+
+
+              </div>
+
+            ))}
+
+
+          </div>
 
         )}
 
+
       </div>
 
-      {items.length === 0 ? (
 
-        <div className="rounded-3xl border border-dashed border-white/10 py-24 text-center">
-
-          <div className="text-7xl">
-            ❤️
-          </div>
-
-          <h2 className="mt-6 text-3xl font-light">
-            Nothing saved yet
-          </h2>
-
-          <p className="mt-4 text-white/50">
-            Start tapping hearts around the app.
-          </p>
-
-        </div>
-
-      ) : (
-
-        <div className="grid gap-6">
-
-          {items.map((item) => (
-
-            <div
-              key={`${item.type}-${item.id}`}
-              className="
-                flex
-                items-center
-                justify-between
-                rounded-2xl
-                border
-                border-white/10
-                bg-white/[0.03]
-                p-6
-              "
-            >
-
-              <div>
-
-                <p className="text-sm uppercase tracking-[0.3em] text-white/40">
-                  {item.type}
-                </p>
-
-                <h2 className="mt-2 text-3xl font-light">
-                  {item.id}
-                </h2>
-
-              </div>
-
-              <div className="text-5xl">
-                ❤️
-              </div>
-
-            </div>
-
-          ))}
-
-        </div>
-
-      )}
-
-    </DashboardLayout>
+    </main>
   );
 }

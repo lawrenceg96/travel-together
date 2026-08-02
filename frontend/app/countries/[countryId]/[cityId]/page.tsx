@@ -1,178 +1,245 @@
-import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
-import DashboardLayout from "@/components/Dashboard/DashboardLayout";
-import FavoriteButton from "@/components/ui/FavoriteButton";
-import ImageCard from "@/components/ui/ImageCard";
-import Section from "@/components/ui/Section";
-
-import { attractions } from "@/lib/attractions";
 import { countries } from "@/lib/countries";
 import { cities } from "@/lib/cities";
+import { attractions } from "@/lib/attractions";
 
-type Props = {
+import HeroImage from "@/components/Shared/HeroImage";
+import WishlistButton from "@/components/WishlistButton";
+
+
+interface Props {
   params: Promise<{
     countryId: string;
     cityId: string;
   }>;
-};
+}
+
 
 export default async function CityPage({
   params,
 }: Props) {
-  const { countryId, cityId } = await params;
+
+  const {
+    countryId,
+    cityId,
+  } = await params;
+
 
   const country = countries.find(
-    (country) => country.id === countryId
+    (item) => item.id === countryId
   );
+
 
   const city = cities.find(
-    (city) =>
-      city.countryId === countryId &&
-      city.id === cityId
+    (item) => item.id === cityId
   );
 
-  if (!country || !city) {
-    notFound();
-  }
 
   const cityAttractions = attractions.filter(
-    (attraction) => attraction.cityId === city.id
+    (item) => item.cityId === cityId
   );
 
+
+  if (!country || !city) {
+    return (
+      <main className="min-h-screen bg-[#07141F] p-10 text-white">
+        <h1 className="text-4xl">
+          City not found
+        </h1>
+      </main>
+    );
+  }
+
+
   return (
-    <DashboardLayout>
+    <main
+      className="
+        min-h-screen
+        bg-[#07141F]
+        p-10
+        text-white
+      "
+    >
 
-      <Link
-        href={`/countries/${country.id}`}
-        className="mb-8 inline-flex items-center gap-2 text-white/60 transition hover:text-white"
-      >
-        ← Back to {country.name}
-      </Link>
+      <div className="mx-auto max-w-6xl">
 
-      <div className="relative mb-16 h-[520px] overflow-hidden rounded-[32px]">
 
-        <FavoriteButton
-          id={city.id}
-          type="city"
+        <HeroImage
+          image={city.image}
+          title={city.name}
+          subtitle={`${country.flag} ${country.name}`}
         />
 
-        <Image
-          src={city.image}
-          alt={city.name}
-          fill
-          priority
-          sizes="(max-width:768px)100vw,(max-width:1280px)75vw,900px"
-          className="object-cover"
-        />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+        <div className="mt-6">
+          <WishlistButton
+            id={city.id}
+            name={city.name}
+            type="city"
+            image={city.image}
+          />
+        </div>
 
-        <div className="absolute bottom-10 left-10">
 
-          <p className="text-xl text-white/70">
-            {country.flag} {country.name}
-          </p>
 
-          <h1 className="mt-3 text-7xl font-light">
-            {city.name}
-          </h1>
+        <section
+          className="
+            mt-10
+            rounded-3xl
+            border
+            border-white/10
+            bg-white/5
+            p-8
+          "
+        >
 
-          <p className="mt-5 max-w-2xl text-xl text-white/80">
+          <h2 className="text-3xl font-light">
+            About {city.name}
+          </h2>
+
+
+          <p className="mt-4 max-w-3xl text-white/60">
             {city.description}
           </p>
 
-        </div>
+        </section>
 
-      </div>
 
-      <Section
-        title="Overview"
-        subtitle="Everything you need to know."
-      >
 
-        <div className="grid gap-8 lg:grid-cols-3">
+        <section
+          className="
+            mt-8
+            grid
+            gap-5
+            sm:grid-cols-2
+          "
+        >
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8">
+          <div
+            className="
+              rounded-3xl
+              border
+              border-white/10
+              bg-white/5
+              p-6
+            "
+          >
 
-            <div className="text-4xl">
-              🌤️
-            </div>
-
-            <h3 className="mt-5 text-3xl font-light">
-              Best Time
-            </h3>
-
-            <p className="mt-4 text-white/70">
-              {city.season}
+            <p className="text-xs uppercase tracking-[0.3em] text-white/40">
+              Budget
             </p>
 
-          </div>
-
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8">
-
-            <div className="text-4xl">
-              💷
-            </div>
-
-            <h3 className="mt-5 text-3xl font-light">
-              Budget
-            </h3>
-
-            <p className="mt-4 text-white/70">
+            <p className="mt-3 text-3xl font-light">
               {city.budget}
             </p>
 
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8">
 
-            <div className="text-4xl">
-              ❤️
-            </div>
 
-            <h3 className="mt-5 text-3xl font-light">
-              Match
-            </h3>
+          <div
+            className="
+              rounded-3xl
+              border
+              border-white/10
+              bg-white/5
+              p-6
+            "
+          >
 
-            <p className="mt-4 text-white/70">
-              Coming Soon
+            <p className="text-xs uppercase tracking-[0.3em] text-white/40">
+              Best Season
+            </p>
+
+            <p className="mt-3 text-3xl font-light">
+              {city.season}
             </p>
 
           </div>
 
-        </div>
+        </section>
 
-      </Section>
 
-      <Section
-        title="Top Attractions"
-        subtitle="The places you shouldn't miss."
-        rightText={`${cityAttractions.length} places`}
-      >
 
-        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+        <section className="mt-12">
 
-          {cityAttractions.map((attraction) => (
+          <h2 className="text-4xl font-light">
+            Experiences
+          </h2>
 
-            <ImageCard
-              key={attraction.id}
-              id={attraction.id}
-              type="attraction"
-              href={`/countries/${country.id}/${city.id}/${attraction.id}`}
-              image={attraction.image}
-              title={attraction.name}
-              subtitle={attraction.category}
-              description={attraction.description}
-            />
 
-          ))}
+          <div
+            className="
+              mt-6
+              grid
+              gap-6
+              md:grid-cols-2
+              lg:grid-cols-3
+            "
+          >
 
-        </div>
+            {cityAttractions.map((attraction) => (
 
-      </Section>
+              <Link
+                key={attraction.id}
+                href={`/countries/${country.id}/${city.id}/${attraction.id}`}
+                className="
+                  group
+                  overflow-hidden
+                  rounded-3xl
+                  border
+                  border-white/10
+                  bg-white/5
+                  transition
+                  hover:-translate-y-1
+                  hover:bg-white/10
+                "
+              >
 
-    </DashboardLayout>
+                <img
+                  src={attraction.image}
+                  alt={attraction.name}
+                  className="
+                    h-48
+                    w-full
+                    object-cover
+                    transition
+                    duration-300
+                    group-hover:scale-105
+                  "
+                />
+
+
+                <div className="p-6">
+
+                  <h3 className="text-xl font-light">
+                    {attraction.name}
+                  </h3>
+
+
+                  <p className="mt-2 text-sm text-white/50">
+                    {attraction.category}
+                  </p>
+
+
+                  <p className="mt-4 text-sm text-white/60">
+                    {attraction.description}
+                  </p>
+
+                </div>
+
+              </Link>
+
+            ))}
+
+          </div>
+
+        </section>
+
+
+      </div>
+
+    </main>
   );
 }
