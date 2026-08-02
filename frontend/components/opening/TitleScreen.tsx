@@ -2,24 +2,56 @@
 
 import { motion } from "framer-motion";
 import { Plane } from "lucide-react";
-import ContinueButton from "./ContinueButton";
+import InstaxWide from "./InstaxWide";
 
-export default function TitleScreen() {
+import localFont from "next/font/local";
+
+
+const benguiat = localFont({
+
+  src:"../../public/fonts/benguiat-bold.ttf",
+
+  display:"swap",
+
+});
+
+
+
+export default function TitleScreen(){
+
   return (
-    <div className="relative flex h-screen items-center justify-center overflow-hidden bg-[#08110C] text-white">
+
+    <div
+      className="
+        relative
+        flex
+        h-screen
+        items-center
+        justify-center
+        overflow-hidden
+        bg-[#08110C]
+        text-white
+      "
+    >
+
+
 
       {/* Aurora Layer 1 */}
+
       <motion.div
+
         animate={{
-          x: [-120, 120, -120],
-          y: [-40, 30, -40],
-          rotate: [0, 10, 0],
+          x:[-120,120,-120],
+          y:[-40,30,-40],
+          rotate:[0,10,0],
         }}
+
         transition={{
-          duration: 30,
-          repeat: Infinity,
-          ease: "easeInOut",
+          duration:30,
+          repeat:Infinity,
+          ease:"easeInOut",
         }}
+
         className="
           absolute
           -left-40
@@ -30,20 +62,28 @@ export default function TitleScreen() {
           bg-[#2E6F57]/25
           blur-[180px]
         "
+
       />
 
+
+
+
       {/* Aurora Layer 2 */}
+
       <motion.div
+
         animate={{
-          x: [120, -120, 120],
-          y: [40, -40, 40],
-          rotate: [0, -12, 0],
+          x:[120,-120,120],
+          y:[40,-40,40],
+          rotate:[0,-12,0],
         }}
+
         transition={{
-          duration: 36,
-          repeat: Infinity,
-          ease: "easeInOut",
+          duration:36,
+          repeat:Infinity,
+          ease:"easeInOut",
         }}
+
         className="
           absolute
           -right-40
@@ -54,19 +94,27 @@ export default function TitleScreen() {
           bg-[#4F9D69]/20
           blur-[220px]
         "
+
       />
 
+
+
+
       {/* Centre Glow */}
+
       <motion.div
+
         animate={{
-          scale: [1, 1.12, 1],
-          opacity: [0.35, 0.55, 0.35],
+          scale:[1,1.12,1],
+          opacity:[0.35,0.55,0.35],
         }}
+
         transition={{
-          duration: 18,
-          repeat: Infinity,
-          ease: "easeInOut",
+          duration:18,
+          repeat:Infinity,
+          ease:"easeInOut",
         }}
+
         className="
           absolute
           left-1/2
@@ -79,20 +127,58 @@ export default function TitleScreen() {
           bg-[#7BC47F]/10
           blur-[170px]
         "
+
       />
 
-      {/* Vignette */}
-      <div className="absolute inset-0 bg-black/30" />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center">
+
+
+      {/* Vignette */}
+
+      <div
+        className="
+          absolute
+          inset-0
+          bg-black/30
+        "
+      />
+
+
+
+
+
+
+      <div
+        className="
+          relative
+          z-10
+          flex
+          flex-col
+          items-center
+        "
+      >
+
+
+
 
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2 }}
-          className="
-            font-benguiat
+
+          initial={{
+            opacity:0,
+            y:30,
+          }}
+
+          animate={{
+            opacity:1,
+            y:0,
+          }}
+
+          transition={{
+            duration:1.2,
+          }}
+
+          className={`
+            ${benguiat.className}
             text-center
             uppercase
             leading-[0.88]
@@ -101,26 +187,43 @@ export default function TitleScreen() {
             text-5xl
             md:text-7xl
             lg:text-8xl
-          "
+          `}
+
           style={{
-            textShadow: "0 10px 35px rgba(0,0,0,0.55)",
+            textShadow:"0 10px 35px rgba(0,0,0,0.55)",
           }}
+
         >
+
           CIARA & LAWRENCE'S
           <br />
           HOLIDAY PLANNER
+
         </motion.h1>
 
-        {/* Underline */}
+
+
+
+
+
+        {/* Plane Line */}
+
         <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: 340 }}
-          transition={{
-            delay: 0.8,
-            duration: 1,
+
+          initial={{
+            width:0,
           }}
+
+          animate={{
+            width:340,
+          }}
+
+          transition={{
+            delay:0.8,
+            duration:1,
+          }}
+
           className="
-            relative
             mt-8
             h-px
             w-[340px]
@@ -129,37 +232,89 @@ export default function TitleScreen() {
             via-emerald-300
             to-transparent
           "
+
         >
-          {/* Flying Plane */}
+
+
           <motion.div
-            initial={{ x: -25 }}
-            animate={{ x: 365 }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              repeatDelay: 2,
-              ease: "linear",
+
+            animate={{
+              x:365,
             }}
+
+            transition={{
+              duration:8,
+              repeat:Infinity,
+              repeatDelay:2,
+              ease:"linear",
+            }}
+
             className="
-              absolute
+              relative
               -top-3
               left-0
             "
+
           >
+
             <Plane
+
               size={18}
-              className="rotate-45 text-emerald-200 drop-shadow-md"
+
+              className="
+                rotate-45
+                text-emerald-200
+                drop-shadow-md
+              "
+
             />
+
+
           </motion.div>
+
 
         </motion.div>
 
-        <div className="mt-16">
-          <ContinueButton />
-        </div>
+
+
+
+
+
+        {/* Polaroid */}
+
+        <motion.div
+
+          initial={{
+            opacity:0,
+            y:30,
+          }}
+
+          animate={{
+            opacity:1,
+            y:0,
+          }}
+
+          transition={{
+            delay:1.3,
+            duration:1,
+          }}
+
+          className="mt-10"
+
+        >
+
+          <InstaxWide />
+
+        </motion.div>
+
+
+
 
       </div>
 
+
     </div>
+
   );
+
 }

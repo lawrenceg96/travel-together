@@ -4,95 +4,142 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 export default function InstaxWide() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-[#090909] px-6">
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.97 }}
-        animate={{
-          opacity: 1,
-          scale: 1,
-        }}
-        transition={{
-          duration: 1,
-          ease: "easeOut",
-        }}
-        className="relative"
+  return (
+
+    <motion.div
+
+      initial={{
+        opacity:0,
+        y:20,
+        scale:0.96,
+      }}
+
+      animate={{
+        opacity:1,
+        y:0,
+        scale:1,
+      }}
+
+      transition={{
+        duration:1,
+        ease:"easeOut",
+      }}
+
+      className="
+        relative
+        w-fit
+      "
+
+    >
+
+
+      <div
+        className="
+          absolute
+          inset-0
+          translate-y-4
+          rounded-[18px]
+          bg-black/40
+          blur-2xl
+        "
+      />
+
+
+
+      <div
+        className="
+          relative
+          rounded-[16px]
+          bg-[#F5F2EB]
+          p-3
+          pb-5
+          border
+          border-[#E6E0D6]
+          shadow-[0_12px_40px_rgba(0,0,0,0.5)]
+        "
       >
 
-        {/* Drop shadow */}
-        <div className="absolute inset-0 translate-y-6 rounded-[26px] bg-black/40 blur-3xl" />
 
-        {/* Instax Paper */}
         <div
           className="
             relative
-            rounded-[22px]
-            bg-[#F5F2EB]
-            p-5
-            pb-10
-            border
-            border-[#E6E0D6]
-            shadow-[0_18px_60px_rgba(0,0,0,0.55)]
+            overflow-hidden
+            rounded-[9px]
+            w-[305px]
+            max-w-[60vw]
+            aspect-[1.62/1]
+            bg-black
           "
         >
 
-          {/* Photo Window */}
-          <div
+
+          <motion.div
+
+            initial={{
+              scale:1,
+            }}
+
+            animate={{
+              scale:1.03,
+            }}
+
+            transition={{
+              duration:8,
+              ease:"easeOut",
+            }}
+
             className="
               relative
-              overflow-hidden
-              rounded-[12px]
-              w-[920px]
-              max-w-[88vw]
-              aspect-[1.62/1]
-              bg-black
-              shadow-[inset_0_0_20px_rgba(0,0,0,0.28)]
+              h-full
+              w-full
             "
+
           >
 
-            {/* Slow Ken Burns */}
-            <motion.div
-              initial={{ scale: 1 }}
-              animate={{ scale: 1.03 }}
-              transition={{
-                duration: 8,
-                ease: "easeOut",
-              }}
-              className="relative h-full w-full"
-            >
-              <Image
-                src="/images/cover.jpg"
-                alt="Ciara and Lawrence"
-                fill
-                priority
-                className="object-cover"
-              />
-            </motion.div>
+            <Image
 
-            {/* Soft vignette */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/10" />
-          </div>
+              src="/images/cover.jpg"
 
-          {/* Bottom Instax space */}
-          <div className="h-8" />
+              alt="Ciara and Lawrence"
 
-          {/* Paper highlight */}
+              fill
+
+              priority
+
+              className="
+                object-cover
+              "
+
+            />
+
+          </motion.div>
+
+
+
           <div
             className="
-              pointer-events-none
               absolute
               inset-0
-              rounded-[22px]
-              bg-gradient-to-br
-              from-white/20
+              bg-gradient-to-b
+              from-black/5
               via-transparent
-              to-transparent
+              to-black/10
             "
           />
-        </div>
-      </motion.div>
 
-    </div>
+        </div>
+
+
+
+        <div className="h-3" />
+
+
+      </div>
+
+
+    </motion.div>
+
   );
+
 }

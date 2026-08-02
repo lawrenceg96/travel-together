@@ -42,7 +42,7 @@ export default function HomePage() {
       } else {
         setScreen("welcome");
       }
-    }, 2200);
+    }, 4000);
 
     return () => clearTimeout(timer);
   }, []);
