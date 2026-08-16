@@ -96,10 +96,14 @@ export default function TravelDNAPage(){
 
           >
 
-            Find out what experiences you both love
-            and discover the places that match you.
+            Discover your travel styles,
+            find shared passions,
+            and uncover the destinations
+            you'll love exploring together.
 
           </p>
+
+
 
 
 
@@ -164,12 +168,14 @@ export default function TravelDNAPage(){
 
                 Explore the experiences,
                 activities and adventures
-                you enjoy.
+                that shape your travel style.
 
               </p>
 
 
             </div>
+
+
 
 
 
@@ -206,7 +212,7 @@ export default function TravelDNAPage(){
 
               >
 
-                Match
+                Connect
 
               </h2>
 
@@ -220,14 +226,16 @@ export default function TravelDNAPage(){
 
               >
 
-                Compare your answers
-                and discover what you
-                both love.
+                Compare your travel styles
+                and discover the experiences
+                you share together.
 
               </p>
 
 
             </div>
+
+
 
 
 
@@ -278,7 +286,7 @@ export default function TravelDNAPage(){
 
               >
 
-                Find cities and countries
+                Discover cities and countries
                 that fit your shared travel style.
 
               </p>
@@ -289,6 +297,7 @@ export default function TravelDNAPage(){
 
 
           </div>
+
 
 
 
@@ -318,9 +327,12 @@ export default function TravelDNAPage(){
 
           >
 
-            Start Travel DNA →
+            Begin Questionnaire →
 
           </button>
+
+
+
 
 
 

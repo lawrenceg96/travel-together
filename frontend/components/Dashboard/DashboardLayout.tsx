@@ -174,9 +174,9 @@ export default function DashboardLayout({
 
               <SidebarItem
 
-                href="/passport"
+                href="/travel-dna/questionnaire"
 
-                icon={<BookOpen size={20} />}
+                icon={<Globe2 size={20} />}
 
                 text="Travel Questionnaire"
 

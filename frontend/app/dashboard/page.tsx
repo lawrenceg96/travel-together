@@ -141,13 +141,13 @@ export default function DashboardPage() {
 
         <DashboardCard
 
-          emoji="🛂"
+          emoji="🧬"
 
           title="Travel Questionnaire"
 
-          description="Explore countries."
+          description="Discover your travel style."
 
-          href="/passport"
+          href="/travel-dna/questionnaire"
 
         />
 
