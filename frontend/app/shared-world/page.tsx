@@ -31,6 +31,7 @@ import {
 
 import {
   getTopCityMatches,
+  getCityMatchPercentage,
 } from "@/lib/travelDNAMatching";
 
 
@@ -41,13 +42,14 @@ import {
 
 import SharedStats from "@/components/SharedWorld/SharedStats";
 
-import SharedDNACard from "@/components/SharedWorld/SharedDNACard";
+import SharedTravelStyle from "@/components/SharedWorld/SharedTravelStyle";
 
-import TravelDNACompatibility from "@/components/SharedWorld/TravelDNACompatibility";
+import MaybeDestinations from "@/components/SharedWorld/MaybeDestinations";
 
 import InteractiveSharedMap from "@/components/SharedWorld/InteractiveSharedMap";
 
 import ContinentTile from "@/components/SharedWorld/ContinentTile";
+
 
 
 
@@ -62,7 +64,6 @@ export default function SharedWorldPage(){
     mounted,
     setMounted
   ] = useState(false);
-
 
 
 
@@ -93,6 +94,33 @@ export default function SharedWorldPage(){
 
   const cityMatches =
     getTopCityMatches();
+
+
+
+
+
+  const maximumCityScore =
+
+    cityMatches.length > 0
+
+      ?
+
+      Math.max(
+
+        ...cityMatches.map(
+
+          (city)=>
+
+            city.score
+
+        )
+
+      )
+
+      :
+
+      0;
+
 
 
 
@@ -165,8 +193,11 @@ export default function SharedWorldPage(){
 
 
 
-        grouped[continent].push(country);
+        grouped[continent].push(
 
+          country
+
+        );
 
 
       });
@@ -178,7 +209,6 @@ export default function SharedWorldPage(){
 
 
     },[shared]);
-
 
 
 
@@ -200,9 +230,7 @@ export default function SharedWorldPage(){
 
 
 
-
   return (
-
 
     <main
 
@@ -267,7 +295,6 @@ export default function SharedWorldPage(){
 
 
 
-
         <div className="mt-10">
 
 
@@ -297,23 +324,14 @@ export default function SharedWorldPage(){
 
 
 
-
-        <TravelDNACompatibility />
-
+        <SharedTravelStyle />
 
 
 
+        <MaybeDestinations />
 
 
-
-        <SharedDNACard />
-
-
-
-
-
-
-
+        
 
 
         {
@@ -333,7 +351,6 @@ export default function SharedWorldPage(){
             "
 
           >
-
 
 
             <p
@@ -396,7 +413,6 @@ export default function SharedWorldPage(){
                   (match)=>(
 
 
-
                     (()=>{
 
 
@@ -432,6 +448,18 @@ export default function SharedWorldPage(){
 
 
 
+                      const matchPercentage =
+
+                        getCityMatchPercentage(
+
+                          match.score,
+
+                          maximumCityScore
+
+                        );
+
+
+
 
 
 
@@ -455,7 +483,6 @@ export default function SharedWorldPage(){
 
 
 
-
                           <img
 
                             src={city.image}
@@ -474,10 +501,7 @@ export default function SharedWorldPage(){
 
 
 
-
                           <div className="p-6">
-
-
 
 
 
@@ -518,6 +542,25 @@ export default function SharedWorldPage(){
 
 
 
+
+                            <p
+
+                              className="
+                                mt-3
+                                text-2xl
+                                text-emerald-400
+                              "
+
+                            >
+
+                              {matchPercentage}% Travel Match
+
+                            </p>
+
+
+
+
+
                             <p
 
                               className="
@@ -537,103 +580,116 @@ export default function SharedWorldPage(){
 
 
 
-                            <p
-
-                              className="
-                                mt-5
-                                text-sm
-                                text-white/40
-                              "
-
-                            >
-
-                              ❤️ {match.score} shared experiences
-
-                            </p>
-
-
-
-
-
-
-
                             <div
 
                               className="
-                                mt-4
-                                flex
-                                flex-wrap
-                                gap-2
+                                mt-6
                               "
 
                             >
 
 
-                              {
+                              <p
 
-                                match.matchedExperiences.map(
+                                className="
+                                  text-sm
+                                  text-white/50
+                                "
 
-                                  (experienceId)=>(
+                              >
+
+                                Because you both love:
+
+                              </p>
 
 
-                                    (()=>{
 
 
-                                      const experience =
 
-                                        travelExperiences.find(
+                              <div
 
-                                          item =>
+                                className="
+                                  mt-3
+                                  flex
+                                  flex-wrap
+                                  gap-2
+                                "
 
-                                            item.id === experienceId
+                              >
+
+
+
+                                {
+
+                                  match.matchedExperiences.map(
+
+                                    (experienceId)=>(
+
+
+                                      (()=>{
+
+
+                                        const experience =
+
+                                          travelExperiences.find(
+
+                                            item =>
+
+                                              item.id === experienceId
+
+                                          );
+
+
+
+                                        if(!experience){
+
+                                          return null;
+
+                                        }
+
+
+
+
+
+                                        return (
+
+
+                                          <span
+
+                                            key={experienceId}
+
+                                            className="
+                                              rounded-full
+                                              border
+                                              border-white/10
+                                              bg-white/5
+                                              px-3
+                                              py-1
+                                              text-xs
+                                              text-white/70
+                                            "
+
+                                          >
+
+                                            {experience.name}
+
+                                          </span>
+
 
                                         );
 
 
-
-                                      if(!experience){
-
-                                        return null;
-
-                                      }
+                                      })()
 
 
-
-                                      return (
-
-                                        <span
-
-                                          key={experienceId}
-
-                                          className="
-                                            rounded-full
-                                            border
-                                            border-white/10
-                                            bg-white/5
-                                            px-3
-                                            py-1
-                                            text-xs
-                                            text-white/70
-                                          "
-
-                                        >
-
-                                          {experience.name}
-
-                                        </span>
-
-
-                                      );
-
-
-                                    })()
-
+                                    )
 
                                   )
 
-                                )
+                                }
 
-                              }
+
+                              </div>
 
 
                             </div>
@@ -643,20 +699,49 @@ export default function SharedWorldPage(){
 
 
 
-                          </div>
+                            <div
 
+                              className="
+                                mt-6
+                                space-y-1
+                                text-sm
+                                text-white/50
+                              "
+
+                            >
+
+                              <p>
+
+                                📅 Best time: {city.season}
+
+                              </p>
+
+
+                              <p>
+
+                                💷 Budget: {city.budget}
+
+                              </p>
+
+
+                            </div>
+
+
+
+
+
+
+
+                          </div>
 
 
                         </div>
 
 
-
                       );
 
 
-
                     })()
-
 
 
                   )
@@ -673,7 +758,6 @@ export default function SharedWorldPage(){
 
 
           </section>
-
 
 
         }
@@ -735,7 +819,6 @@ export default function SharedWorldPage(){
               ])=>(
 
 
-
                 <ContinentTile
 
                   key={continent}
@@ -749,15 +832,15 @@ export default function SharedWorldPage(){
 
               )
 
+
             )
+
 
           }
 
 
 
         </section>
-
-
 
 
 

@@ -1,38 +1,71 @@
 "use client";
 
-import {
-  getSharedTravelDNA,
-} from "@/lib/travelDNAStorage";
 
 import {
-  travelExperiences,
-} from "@/lib/travelExperiences";
+  getMaybeCountries,
+} from "@/lib/destinationComparison";
 
 
-export default function SharedDNACard(){
+import {
+  countries,
+} from "@/lib/countries";
 
 
-  const sharedDNA =
-    getSharedTravelDNA();
 
 
 
-  const experiences =
-    sharedDNA.map(
-      (item)=>
 
-        travelExperiences.find(
-          (experience)=>
-            experience.id === item.experienceId
+
+export default function MaybeDestinations(){
+
+
+
+  const maybeCountries =
+
+    getMaybeCountries();
+
+
+
+
+
+  const destinations =
+
+    maybeCountries.map(
+
+      (id)=>
+
+        countries.find(
+
+          (country)=>
+
+            country.id === id
+
         )
 
     )
+
     .filter(Boolean);
 
 
 
 
+
+
+
+  if(destinations.length === 0){
+
+    return null;
+
+  }
+
+
+
+
+
+
+
   return (
+
 
     <section
 
@@ -48,6 +81,8 @@ export default function SharedDNACard(){
     >
 
 
+
+
       <p
 
         className="
@@ -59,9 +94,11 @@ export default function SharedDNACard(){
 
       >
 
-        Shared Travel DNA
+        Maybe List
 
       </p>
+
+
 
 
 
@@ -76,9 +113,11 @@ export default function SharedDNACard(){
 
       >
 
-        ❤️ What you both love
+        💭 Worth Discussing
 
       </h2>
+
+
 
 
 
@@ -92,9 +131,12 @@ export default function SharedDNACard(){
 
       >
 
-        Experiences that match both of your travel personalities.
+        Places one of you loves and the other might be convinced by.
 
       </p>
+
+
+
 
 
 
@@ -105,61 +147,88 @@ export default function SharedDNACard(){
         className="
           mt-8
           grid
-          gap-4
-          md:grid-cols-3
+          gap-5
+          md:grid-cols-2
+          lg:grid-cols-3
         "
 
       >
 
 
+
         {
 
-          experiences.map(
+          destinations.map(
 
-            (experience)=>(
+            (country)=>(
 
 
               <div
 
-                key={experience!.id}
+                key={country!.id}
 
                 className="
                   rounded-3xl
                   border
                   border-white/10
                   bg-black/20
-                  p-5
+                  p-6
                 "
 
               >
 
+
+
+                <div
+
+                  className="
+                    text-4xl
+                  "
+
+                >
+
+                  🌍
+
+                </div>
+
+
+
+
+
                 <h3
 
                   className="
-                    text-xl
+                    mt-4
+                    text-2xl
                     font-light
                   "
 
                 >
 
-                  {experience!.name}
+                  {country!.name}
 
                 </h3>
+
+
+
 
 
                 <p
 
                   className="
-                    mt-2
+                    mt-3
                     text-sm
                     text-white/50
                   "
 
                 >
 
-                  {experience!.category}
+                  Maybe worth adding to your future adventures.
 
                 </p>
+
+
+
 
 
               </div>
@@ -172,11 +241,17 @@ export default function SharedDNACard(){
         }
 
 
+
       </div>
+
+
+
 
 
     </section>
 
+
   );
+
 
 }

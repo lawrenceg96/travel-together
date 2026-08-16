@@ -1,11 +1,16 @@
 import {
   getSharedTravelDNA,
+  getTravelDNAResponses,
 } from "@/lib/travelDNAStorage";
+
 
 import {
   cityExperiences,
   CityExperience,
 } from "@/lib/cityExperiences";
+
+
+
 
 
 
@@ -28,30 +33,87 @@ export type CityMatch = {
 
 
 
+
+function getExperienceScore(
+
+  answer: string
+
+){
+
+
+  switch(answer){
+
+
+    case "love":
+
+      return 3;
+
+
+    case "enjoy":
+
+      return 2;
+
+
+    case "maybe":
+
+      return 1;
+
+
+    default:
+
+      return 0;
+
+
+  }
+
+
+}
+
+
+
+
+
+
+
+
+
 export function getCityMatches():
 
 CityMatch[] {
 
 
-  const sharedDNA =
 
-    getSharedTravelDNA();
+  const responses =
 
-
-
+    getTravelDNAResponses();
 
 
-  const sharedExperienceIds =
 
-    sharedDNA.map(
+
+
+  const lawrence =
+
+    responses.filter(
 
       (item)=>
 
-        item.experienceId
+        item.person === "Lawrence"
 
     );
 
 
+
+
+
+  const ciara =
+
+    responses.filter(
+
+      (item)=>
+
+        item.person === "Ciara"
+
+    );
 
 
 
@@ -64,19 +126,134 @@ CityMatch[] {
       (city: CityExperience)=>{
 
 
-        const matched =
 
-          city.experiences.filter(
+        let score = 0;
 
-            (experience)=>
 
-              sharedExperienceIds.includes(
+        const matchedExperiences:string[] = [];
 
-                experience
 
-              )
 
-          );
+
+
+
+        city.experiences.forEach(
+
+          (experience)=>{
+
+
+
+            const lawrenceAnswer =
+
+              lawrence.find(
+
+                (item)=>
+
+                  item.experienceId === experience
+
+              );
+
+
+
+
+
+            const ciaraAnswer =
+
+              ciara.find(
+
+                (item)=>
+
+                  item.experienceId === experience
+
+              );
+
+
+
+
+
+
+
+            if(
+
+              lawrenceAnswer
+
+              &&
+
+              ciaraAnswer
+
+            ){
+
+
+
+
+
+              const lawrenceScore =
+
+                getExperienceScore(
+
+                  lawrenceAnswer.answer
+
+                );
+
+
+
+
+
+              const ciaraScore =
+
+                getExperienceScore(
+
+                  ciaraAnswer.answer
+
+                );
+
+
+
+
+
+
+
+              if(
+
+                lawrenceScore > 0
+
+                &&
+
+                ciaraScore > 0
+
+              ){
+
+
+
+                score +=
+
+                  lawrenceScore +
+
+                  ciaraScore;
+
+
+
+                matchedExperiences.push(
+
+                  experience
+
+                );
+
+
+              }
+
+
+
+
+            }
+
+
+
+          }
+
+        );
+
+
 
 
 
@@ -94,21 +271,19 @@ CityMatch[] {
             city.countryId,
 
 
-          score:
-
-            matched.length,
+          score,
 
 
-          matchedExperiences:
-
-            matched,
+          matchedExperiences,
 
         };
+
 
 
       }
 
     );
+
 
 
 
@@ -135,7 +310,9 @@ CityMatch[] {
     );
 
 
+
 }
+
 
 
 
@@ -151,6 +328,7 @@ export function getTopCityMatches(
 ){
 
 
+
   return getCityMatches()
 
     .slice(
@@ -160,6 +338,52 @@ export function getTopCityMatches(
       limit
 
     );
+
+
+}
+
+
+
+
+
+
+
+
+
+export function getCityMatchPercentage(
+
+  score:number,
+
+  maxScore:number
+
+){
+
+
+
+  if(maxScore === 0){
+
+    return 0;
+
+  }
+
+
+
+
+  return Math.round(
+
+    (
+
+      score /
+
+      maxScore
+
+    )
+
+    *
+
+    100
+
+  );
 
 
 }
@@ -188,7 +412,6 @@ export function getSharedExperiences(
 
 
 
-
   lawrence.forEach(
 
     (item)=>{
@@ -210,8 +433,6 @@ export function getSharedExperiences(
 
 
 
-
-
       if(match){
 
         shared.push(item);
@@ -222,7 +443,6 @@ export function getSharedExperiences(
     }
 
   );
-
 
 
 
@@ -251,6 +471,7 @@ export function getRecommendedCities(
 ){
 
 
+
   const sharedExperienceIds =
 
     shared.map(
@@ -271,7 +492,7 @@ export function getRecommendedCities(
 
     .map(
 
-      (city: CityExperience)=>{
+      (city:CityExperience)=>{
 
 
         const matchedExperiences =
