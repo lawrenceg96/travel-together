@@ -7,8 +7,47 @@ import {
 
 
 import {
+  getTravelDNAResponses,
+} from "@/lib/travelDNAStorage";
+
+
+import {
   countries,
 } from "@/lib/countries";
+
+
+import {
+  travelExperiences,
+} from "@/lib/travelExperiences";
+
+
+import {
+  countryExperienceMapping,
+} from "@/lib/countryExperienceMapping";
+
+
+
+
+
+
+
+type DNAResponse = {
+
+  person:
+    | "Lawrence"
+    | "Ciara";
+
+  experienceId:string;
+
+  answer:
+    | "love"
+    | "enjoy"
+    | "maybe"
+    | "not-really"
+    | "no";
+
+};
+
 
 
 
@@ -23,6 +62,45 @@ export default function MaybeDestinations(){
   const maybeCountries =
 
     getMaybeCountries();
+
+
+
+
+
+  const responses =
+
+    getTravelDNAResponses();
+
+
+
+
+
+  const lawrence =
+
+    responses.filter(
+
+      (item)=>
+
+        item.person === "Lawrence"
+
+    );
+
+
+
+
+
+  const ciara =
+
+    responses.filter(
+
+      (item)=>
+
+        item.person === "Ciara"
+
+    );
+
+
+
 
 
 
@@ -57,6 +135,174 @@ export default function MaybeDestinations(){
     return null;
 
   }
+
+
+
+
+
+
+
+
+
+  function getExperiencesForPerson(
+
+    countryId:string,
+
+    personResponses:DNAResponse[],
+
+    answers:string[]
+
+  ){
+
+
+
+    const experiences =
+
+      countryExperienceMapping[countryId] || [];
+
+
+
+
+
+
+    return experiences
+
+      .filter(
+
+        (experienceId)=>
+
+          personResponses.some(
+
+            (response)=>
+
+              response.experienceId === experienceId
+
+              &&
+
+              answers.includes(
+
+                response.answer
+
+              )
+
+          )
+
+      )
+
+      .map(
+
+        (experienceId)=>
+
+          travelExperiences.find(
+
+            (experience)=>
+
+              experience.id === experienceId
+
+          )
+
+      )
+
+      .filter(Boolean);
+
+
+  }
+
+
+
+
+
+
+
+
+
+  function ExperiencePills({
+
+    items,
+
+  }:{
+
+    items:any[];
+
+  }){
+
+
+
+    if(items.length === 0){
+
+      return (
+
+        <p className="text-sm text-white/30">
+
+          Nothing matched yet
+
+        </p>
+
+      );
+
+    }
+
+
+
+
+
+    return (
+
+      <div
+
+        className="
+          mt-3
+          flex
+          flex-wrap
+          gap-2
+        "
+
+      >
+
+        {
+
+          items.map(
+
+            (experience)=>(
+
+
+              <span
+
+                key={experience.id}
+
+                className="
+                  rounded-full
+                  border
+                  border-white/10
+                  bg-white/5
+                  px-3
+                  py-1
+                  text-xs
+                  text-white/70
+                "
+
+              >
+
+                {experience.name}
+
+              </span>
+
+
+            )
+
+          )
+
+        }
+
+
+      </div>
+
+    );
+
+
+  }
+
+
 
 
 
@@ -131,7 +377,7 @@ export default function MaybeDestinations(){
 
       >
 
-        Places one of you loves and the other might be convinced by.
+        Destinations where your travel styles are different, but there may be something worth exploring together.
 
       </p>
 
@@ -147,9 +393,8 @@ export default function MaybeDestinations(){
         className="
           mt-8
           grid
-          gap-5
-          md:grid-cols-2
-          lg:grid-cols-3
+          gap-6
+          lg:grid-cols-2
         "
 
       >
@@ -179,33 +424,17 @@ export default function MaybeDestinations(){
 
 
 
-                <div
-
-                  className="
-                    text-4xl
-                  "
-
-                >
-
-                  🌍
-
-                </div>
-
-
-
-
 
                 <h3
 
                   className="
-                    mt-4
-                    text-2xl
+                    text-3xl
                     font-light
                   "
 
                 >
 
-                  {country!.name}
+                  🌍 {country!.name}
 
                 </h3>
 
@@ -213,19 +442,168 @@ export default function MaybeDestinations(){
 
 
 
-                <p
 
-                  className="
-                    mt-3
-                    text-sm
-                    text-white/50
-                  "
 
-                >
 
-                  Maybe worth adding to your future adventures.
 
-                </p>
+                <div className="mt-6">
+
+
+                  <p className="text-sm text-white/50">
+
+                    ❤️ Lawrence loves:
+
+                  </p>
+
+
+                  <ExperiencePills
+
+                    items={
+
+                      getExperiencesForPerson(
+
+                        country!.id,
+
+                        lawrence,
+
+                        [
+                          "love",
+                          "enjoy"
+                        ]
+
+                      )
+
+                    }
+
+                  />
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <div className="mt-6">
+
+
+                  <p className="text-sm text-white/50">
+
+                    ❤️ Ciara loves:
+
+                  </p>
+
+
+                  <ExperiencePills
+
+                    items={
+
+                      getExperiencesForPerson(
+
+                        country!.id,
+
+                        ciara,
+
+                        [
+                          "love",
+                          "enjoy"
+                        ]
+
+                      )
+
+                    }
+
+                  />
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <div className="mt-6">
+
+
+                  <p className="text-sm text-white/50">
+
+                    🤔 Lawrence is unsure about:
+
+                  </p>
+
+
+                  <ExperiencePills
+
+                    items={
+
+                      getExperiencesForPerson(
+
+                        country!.id,
+
+                        lawrence,
+
+                        [
+                          "maybe",
+                          "not-really"
+                        ]
+
+                      )
+
+                    }
+
+                  />
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <div className="mt-6">
+
+
+                  <p className="text-sm text-white/50">
+
+                    🤔 Ciara is unsure about:
+
+                  </p>
+
+
+                  <ExperiencePills
+
+                    items={
+
+                      getExperiencesForPerson(
+
+                        country!.id,
+
+                        ciara,
+
+                        [
+                          "maybe",
+                          "not-really"
+                        ]
+
+                      )
+
+                    }
+
+                  />
+
+
+                </div>
+
+
 
 
 
