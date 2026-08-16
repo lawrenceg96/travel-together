@@ -18,8 +18,6 @@ interface Props {
 
   waitingFor?: string;
 
-  onContinue?: () => void;
-
 }
 
 
@@ -31,8 +29,6 @@ export default function TravelDNAComplete({
   complete,
 
   waitingFor,
-
-  onContinue,
 
 }: Props){
 
@@ -47,9 +43,11 @@ export default function TravelDNAComplete({
   function continueAction(){
 
 
-    if(onContinue){
+    if(complete){
 
-      onContinue();
+      router.push(
+        "/shared-world"
+      );
 
       return;
 
@@ -57,24 +55,13 @@ export default function TravelDNAComplete({
 
 
 
-    if(complete){
-
-      router.push(
-        "/shared-world"
-      );
-
-    }
-
-    else{
-
-      router.push(
-        "/dashboard"
-      );
-
-    }
+    router.push(
+      "/dashboard"
+    );
 
 
   }
+
 
 
 
@@ -137,6 +124,7 @@ export default function TravelDNAComplete({
 
 
 
+
         <h1
 
           className="
@@ -150,6 +138,8 @@ export default function TravelDNAComplete({
           Travel DNA
 
         </h1>
+
+
 
 
 
@@ -187,6 +177,7 @@ export default function TravelDNAComplete({
 
 
 
+
         {
 
           !complete && waitingFor &&
@@ -212,6 +203,7 @@ export default function TravelDNAComplete({
 
 
 
+
         {
 
           complete &&
@@ -229,11 +221,14 @@ export default function TravelDNAComplete({
 
           >
 
+
             <div className="text-4xl">
 
               ❤️ 🌍 ✈️
 
             </div>
+
+
 
 
             <p
@@ -252,9 +247,11 @@ export default function TravelDNAComplete({
             </p>
 
 
+
           </div>
 
         }
+
 
 
 

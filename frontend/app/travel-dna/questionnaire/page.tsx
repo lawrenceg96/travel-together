@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  useEffect,
   useState,
 } from "react";
 
@@ -17,7 +16,7 @@ import {
 } from "@/lib/travelDNAStorage";
 
 import {
-  getCurrentPlanner,
+  setCurrentPlanner,
 } from "@/lib/userStorage";
 
 import TravelDNAComplete from "@/components/TravelDNA/TravelDNAComplete";
@@ -27,6 +26,7 @@ import TravelDNAComplete from "@/components/TravelDNA/TravelDNAComplete";
 type Planner =
   | "Lawrence"
   | "Ciara";
+
 
 
 
@@ -70,6 +70,9 @@ const answerOptions: {
 
 
 
+
+
+
 export default function TravelDNAQuestionnaire(){
 
 
@@ -103,27 +106,27 @@ export default function TravelDNAQuestionnaire(){
 
 
 
-  useEffect(()=>{
-
-    const planner =
-      getCurrentPlanner();
 
 
+  function choosePerson(
 
-    if(
+    planner: Planner
 
-      planner === "Lawrence"
-      ||
-      planner === "Ciara"
+  ){
 
-    ){
-
-      setPerson(planner);
-
-    }
+    setCurrentPlanner(
+      planner
+    );
 
 
-  },[]);
+    setPerson(
+      planner
+    );
+
+
+  }
+
+
 
 
 
@@ -132,6 +135,7 @@ export default function TravelDNAQuestionnaire(){
 
 
   if(!person){
+
 
     return (
 
@@ -144,13 +148,16 @@ export default function TravelDNAQuestionnaire(){
           justify-center
           bg-[#07141F]
           text-white
+          p-10
         "
 
       >
 
+
         <div
 
           className="
+            max-w-xl
             rounded-[40px]
             border
             border-white/10
@@ -161,6 +168,7 @@ export default function TravelDNAQuestionnaire(){
 
         >
 
+
           <div className="text-6xl">
 
             🧬
@@ -168,11 +176,13 @@ export default function TravelDNAQuestionnaire(){
           </div>
 
 
+
+
           <h1
 
             className="
               mt-6
-              text-3xl
+              text-4xl
               font-light
             "
 
@@ -181,6 +191,8 @@ export default function TravelDNAQuestionnaire(){
             Travel DNA
 
           </h1>
+
+
 
 
           <p
@@ -192,9 +204,76 @@ export default function TravelDNAQuestionnaire(){
 
           >
 
-            Please select your traveller profile first.
+            Choose traveller profile
 
           </p>
+
+
+
+
+
+          <div
+
+            className="
+              mt-10
+              flex
+              justify-center
+              gap-5
+            "
+
+          >
+
+
+
+            <button
+
+              onClick={()=>choosePerson("Lawrence")}
+
+              className="
+                rounded-full
+                border
+                border-white/10
+                bg-white/5
+                px-8
+                py-4
+                transition
+                hover:bg-white/10
+              "
+
+            >
+
+              Lawrence
+
+            </button>
+
+
+
+
+
+            <button
+
+              onClick={()=>choosePerson("Ciara")}
+
+              className="
+                rounded-full
+                border
+                border-white/10
+                bg-white/5
+                px-8
+                py-4
+                transition
+                hover:bg-white/10
+              "
+
+            >
+
+              Ciara
+
+            </button>
+
+
+
+          </div>
 
 
         </div>
@@ -212,6 +291,7 @@ export default function TravelDNAQuestionnaire(){
 
 
 
+
   const question =
     travelDNAQuestions[questionIndex];
 
@@ -221,34 +301,40 @@ export default function TravelDNAQuestionnaire(){
 
 
 
-
-
   function answerQuestion(
 
-  answer: TravelDNAAnswer
+    answer: TravelDNAAnswer
 
-){
-
-  if (!person) return;
+  ){
 
 
-  const response: TravelDNAResponse = {
+    const response: TravelDNAResponse = {
 
-    person,
 
-    experienceId:
-      question.id,
+      person,
 
-    answer,
 
-  };
+      experienceId:
+
+        question.id,
+
+
+      answer,
+
+
+    };
+
+
 
 
 
 
 
     const existing =
+
       getTravelDNAResponses();
+
+
 
 
 
@@ -272,6 +358,9 @@ export default function TravelDNAQuestionnaire(){
 
 
 
+
+
+
     const updated = [
 
       ...filtered,
@@ -279,6 +368,7 @@ export default function TravelDNAQuestionnaire(){
       response,
 
     ];
+
 
 
 
@@ -299,17 +389,21 @@ export default function TravelDNAQuestionnaire(){
     if(
 
       questionIndex <
+
       travelDNAQuestions.length - 1
 
     ){
 
+
       setQuestionIndex(
 
-        questionIndex + 1
+        previous => previous + 1
 
       );
 
+
       return;
+
 
     }
 
@@ -319,7 +413,11 @@ export default function TravelDNAQuestionnaire(){
 
 
 
+
     setFinished(true);
+
+
+
 
 
 
@@ -341,6 +439,8 @@ export default function TravelDNAQuestionnaire(){
 
 
 
+
+
     const otherAnswers =
 
       updated.filter(
@@ -355,15 +455,22 @@ export default function TravelDNAQuestionnaire(){
 
 
 
+
+
     setComplete(
 
       otherAnswers.length ===
+
       travelDNAQuestions.length
 
     );
 
 
   }
+
+
+
+
 
 
 
@@ -397,12 +504,6 @@ export default function TravelDNAQuestionnaire(){
 
         }
 
-        onContinue={()=>{
-
-          setFinished(false);
-
-        }}
-
       />
 
     );
@@ -431,6 +532,7 @@ export default function TravelDNAQuestionnaire(){
 
     >
 
+
       <div
 
         className="
@@ -439,6 +541,7 @@ export default function TravelDNAQuestionnaire(){
         "
 
       >
+
 
 
         <h1
@@ -477,6 +580,7 @@ export default function TravelDNAQuestionnaire(){
 
 
 
+
         <div
 
           className="
@@ -492,6 +596,7 @@ export default function TravelDNAQuestionnaire(){
 
 
 
+
           <p
 
             className="
@@ -503,6 +608,7 @@ export default function TravelDNAQuestionnaire(){
             Question {questionIndex + 1} / {travelDNAQuestions.length}
 
           </p>
+
 
 
 
@@ -539,6 +645,7 @@ export default function TravelDNAQuestionnaire(){
           >
 
 
+
             {
 
               answerOptions.map(
@@ -565,6 +672,7 @@ export default function TravelDNAQuestionnaire(){
 
                   >
 
+
                     <span className="text-2xl">
 
                       {option.emoji}
@@ -572,11 +680,13 @@ export default function TravelDNAQuestionnaire(){
                     </span>
 
 
+
                     <span className="ml-4">
 
                       {option.label}
 
                     </span>
+
 
 
                   </button>
@@ -587,6 +697,7 @@ export default function TravelDNAQuestionnaire(){
               )
 
             }
+
 
 
           </div>
