@@ -43,6 +43,8 @@ import SharedStats from "@/components/SharedWorld/SharedStats";
 
 import SharedDNACard from "@/components/SharedWorld/SharedDNACard";
 
+import TravelDNACompatibility from "@/components/SharedWorld/TravelDNACompatibility";
+
 import InteractiveSharedMap from "@/components/SharedWorld/InteractiveSharedMap";
 
 import ContinentTile from "@/components/SharedWorld/ContinentTile";
@@ -55,10 +57,12 @@ import ContinentTile from "@/components/SharedWorld/ContinentTile";
 export default function SharedWorldPage(){
 
 
+
   const [
     mounted,
     setMounted
   ] = useState(false);
+
 
 
 
@@ -68,6 +72,7 @@ export default function SharedWorldPage(){
     setMounted(true);
 
   },[]);
+
 
 
 
@@ -102,6 +107,7 @@ export default function SharedWorldPage(){
 
 
       const grouped:
+
       Record<string, typeof countries> = {};
 
 
@@ -130,10 +136,13 @@ export default function SharedWorldPage(){
 
 
 
+
         const continent =
 
           countryContinents[
+
             country.id
+
           ];
 
 
@@ -143,6 +152,7 @@ export default function SharedWorldPage(){
           return;
 
         }
+
 
 
 
@@ -158,6 +168,7 @@ export default function SharedWorldPage(){
         grouped[continent].push(country);
 
 
+
       });
 
 
@@ -165,7 +176,9 @@ export default function SharedWorldPage(){
       return grouped;
 
 
+
     },[shared]);
+
 
 
 
@@ -187,7 +200,9 @@ export default function SharedWorldPage(){
 
 
 
+
   return (
+
 
     <main
 
@@ -212,6 +227,8 @@ export default function SharedWorldPage(){
 
 
 
+
+
         <h1
 
           className="
@@ -224,6 +241,7 @@ export default function SharedWorldPage(){
           🌍 Your World Together
 
         </h1>
+
 
 
 
@@ -249,17 +267,22 @@ export default function SharedWorldPage(){
 
 
 
+
         <div className="mt-10">
 
 
           <SharedStats
 
             sharedCount={
+
               shared.length
+
             }
 
             maybeCount={
+
               maybe.length
+
             }
 
           />
@@ -267,6 +290,15 @@ export default function SharedWorldPage(){
 
         </div>
 
+
+
+
+
+
+
+
+
+        <TravelDNACompatibility />
 
 
 
@@ -285,6 +317,7 @@ export default function SharedWorldPage(){
 
 
         {
+
           cityMatches.length > 0 &&
 
 
@@ -300,6 +333,7 @@ export default function SharedWorldPage(){
             "
 
           >
+
 
 
             <p
@@ -362,6 +396,7 @@ export default function SharedWorldPage(){
                   (match)=>(
 
 
+
                     (()=>{
 
 
@@ -389,7 +424,6 @@ export default function SharedWorldPage(){
 
 
 
-
                       if(!city){
 
                         return null;
@@ -399,7 +433,11 @@ export default function SharedWorldPage(){
 
 
 
+
+
+
                       return (
+
 
                         <div
 
@@ -414,6 +452,7 @@ export default function SharedWorldPage(){
                           "
 
                         >
+
 
 
 
@@ -435,7 +474,11 @@ export default function SharedWorldPage(){
 
 
 
+
                           <div className="p-6">
+
+
+
 
 
                             <p
@@ -452,6 +495,7 @@ export default function SharedWorldPage(){
                               {country?.name}
 
                             </p>
+
 
 
 
@@ -491,6 +535,8 @@ export default function SharedWorldPage(){
 
 
 
+
+
                             <p
 
                               className="
@@ -504,6 +550,7 @@ export default function SharedWorldPage(){
                               ❤️ {match.score} shared experiences
 
                             </p>
+
 
 
 
@@ -552,7 +599,6 @@ export default function SharedWorldPage(){
 
 
 
-
                                       return (
 
                                         <span
@@ -576,6 +622,7 @@ export default function SharedWorldPage(){
 
                                         </span>
 
+
                                       );
 
 
@@ -595,15 +642,21 @@ export default function SharedWorldPage(){
 
 
 
+
                           </div>
+
 
 
                         </div>
 
+
+
                       );
 
 
+
                     })()
+
 
 
                   )
@@ -613,11 +666,14 @@ export default function SharedWorldPage(){
               }
 
 
+
             </div>
 
 
 
+
           </section>
+
 
 
         }
@@ -663,12 +719,21 @@ export default function SharedWorldPage(){
           {
 
             Object.entries(
+
               continentGroups
+
             )
 
             .map(
 
-              ([continent, continentCountries])=>(
+              ([
+
+                continent,
+
+                continentCountries
+
+              ])=>(
+
 
 
                 <ContinentTile
@@ -686,7 +751,6 @@ export default function SharedWorldPage(){
 
             )
 
-
           }
 
 
@@ -697,7 +761,10 @@ export default function SharedWorldPage(){
 
 
 
+
+
       </div>
+
 
 
     </main>
