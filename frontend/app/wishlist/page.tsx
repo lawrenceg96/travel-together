@@ -9,33 +9,131 @@ import {
   WishlistItem,
 } from "@/lib/wishlist";
 
+import { countries } from "@/lib/countries";
+import { cities } from "@/lib/cities";
+import { attractions } from "@/lib/attractions";
+
 
 export default function WishlistPage() {
 
-  const [items, setItems] = useState<WishlistItem[]>([]);
+
+  const [
+    items,
+    setItems
+  ] = useState<WishlistItem[]>([]);
+
 
 
   useEffect(() => {
+
     setItems(getWishlist());
+
   }, []);
 
 
 
-  function removeItem(
-    id: string,
-    type: WishlistItem["type"]
-  ) {
 
-    removeFromWishlist(id, type);
+
+  function removeItem(
+    id:string,
+    type:WishlistItem["type"]
+  ){
+
+    removeFromWishlist(
+      id,
+      type
+    );
 
     setItems(
       getWishlist()
     );
+
   }
 
 
 
+
+
+  function getLink(
+    item:WishlistItem
+  ){
+
+
+    if(item.type === "country"){
+
+      return `/countries/${item.id}`;
+
+    }
+
+
+
+    if(item.type === "city"){
+
+      const city =
+        cities.find(
+          (city)=>
+            city.id === item.id
+        );
+
+
+      if(city){
+
+        return `/countries/${city.countryId}/${city.id}`;
+
+      }
+
+    }
+
+
+
+
+    if(item.type === "attraction"){
+
+      const attraction =
+        attractions.find(
+          (item2)=>
+            item2.id === item.id
+        );
+
+
+      const city =
+        cities.find(
+          (city)=>
+            city.id === attraction?.cityId
+        );
+
+
+      if(attraction && city){
+
+        return `/countries/${city.countryId}/${city.id}/${attraction.id}`;
+
+      }
+
+    }
+
+
+
+    return "#";
+
+  }
+
+
+
+
+
+  const categories = [
+    "country",
+    "city",
+    "attraction",
+  ] as const;
+
+
+
+
+
+
   return (
+
     <main
       className="
         min-h-screen
@@ -45,7 +143,12 @@ export default function WishlistPage() {
       "
     >
 
-      <div className="mx-auto max-w-6xl">
+      <div
+        className="
+          mx-auto
+          max-w-6xl
+        "
+      >
 
 
         <h1
@@ -54,7 +157,9 @@ export default function WishlistPage() {
             font-light
           "
         >
-          ❤️ My Wishlist
+
+          ❤️ Wishlist
+
         </h1>
 
 
@@ -64,136 +169,207 @@ export default function WishlistPage() {
             text-white/60
           "
         >
-          Places you want to explore together.
+
+          Countries, cities and attractions you have saved.
+
         </p>
 
 
 
-        {items.length === 0 ? (
-
-          <div
-            className="
-              mt-10
-              rounded-3xl
-              border
-              border-white/10
-              bg-white/5
-              p-8
-              text-white/50
-            "
-          >
-            Your wishlist is empty.
-          </div>
-
-        ) : (
 
 
-          <div
-            className="
-              mt-10
-              grid
-              gap-6
-              md:grid-cols-2
-              lg:grid-cols-3
-            "
-          >
+        {
+          categories.map(
+            (category)=>(
 
-            {items.map((item) => (
 
-              <div
-                key={`${item.type}-${item.id}`}
-                className="
-                  overflow-hidden
-                  rounded-3xl
-                  border
-                  border-white/10
-                  bg-white/5
-                "
+              <section
+                key={category}
+                className="mt-12"
               >
 
 
-                {item.image && (
+                <h2
+                  className="
+                    text-3xl
+                    font-light
+                    capitalize
+                  "
+                >
 
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="
-                      h-48
-                      w-full
-                      object-cover
-                    "
-                  />
+                  {category}s
 
-                )}
+                </h2>
 
 
 
-                <div className="p-6">
-
-                  <p
-                    className="
-                      text-xs
-                      uppercase
-                      tracking-[0.25em]
-                      text-white/40
-                    "
-                  >
-                    {item.type}
-                  </p>
 
 
-                  <h2
-                    className="
-                      mt-3
-                      text-2xl
-                      font-light
-                    "
-                  >
-                    {item.name}
-                  </h2>
+                <div
+                  className="
+                    mt-6
+                    grid
+                    gap-6
+                    md:grid-cols-2
+                    lg:grid-cols-3
+                  "
+                >
 
 
 
-                  <button
-                    onClick={() =>
-                      removeItem(
-                        item.id,
-                        item.type
+                  {
+                    items
+                      .filter(
+                        item =>
+                          item.type === category
                       )
-                    }
-                    className="
-                      mt-5
-                      rounded-full
-                      border
-                      border-white/20
-                      px-5
-                      py-2
-                      text-sm
-                      text-white/70
-                      transition
-                      hover:bg-white/10
-                    "
-                  >
-                    Remove
-                  </button>
+                      .map(
+                        item=>(
+
+
+                          <div
+                            key={`${item.type}-${item.id}`}
+                            className="
+                              overflow-hidden
+                              rounded-3xl
+                              border
+                              border-white/10
+                              bg-white/5
+                            "
+                          >
+
+
+
+                            <Link
+                              href={getLink(item)}
+                            >
+
+
+                              {
+                                item.image &&
+
+                                <img
+                                  src={item.image}
+                                  alt={item.name}
+                                  className="
+                                    h-48
+                                    w-full
+                                    object-cover
+                                  "
+                                />
+
+                              }
+
+
+
+                              <div className="p-6">
+
+
+                                <p
+                                  className="
+                                    text-xs
+                                    uppercase
+                                    tracking-[0.25em]
+                                    text-white/40
+                                  "
+                                >
+
+                                  {item.type}
+
+                                </p>
+
+
+
+                                <h3
+                                  className="
+                                    mt-3
+                                    text-2xl
+                                    font-light
+                                  "
+                                >
+
+                                  {item.name}
+
+                                </h3>
+
+
+                              </div>
+
+
+                            </Link>
+
+
+
+
+
+                            <div
+                              className="
+                                px-6
+                                pb-6
+                              "
+                            >
+
+                              <button
+
+                                onClick={() =>
+                                  removeItem(
+                                    item.id,
+                                    item.type
+                                  )
+                                }
+
+                                className="
+                                  rounded-full
+                                  border
+                                  border-white/20
+                                  px-5
+                                  py-2
+                                  text-sm
+                                  text-white/70
+                                  hover:bg-white/10
+                                "
+
+                              >
+
+                                Remove
+
+                              </button>
+
+
+                            </div>
+
+
+
+                          </div>
+
+
+                        )
+
+                      )
+
+                  }
 
 
                 </div>
 
 
-              </div>
-
-            ))}
+              </section>
 
 
-          </div>
+            )
 
-        )}
+          )
+
+        }
+
+
 
 
       </div>
 
 
     </main>
+
   );
+
 }

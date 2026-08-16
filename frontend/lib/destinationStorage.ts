@@ -6,8 +6,10 @@ export type Person =
   | "Ciara";
 
 
+
 export type DestinationAnswer =
   | "yes"
+  | "maybe"
   | "no";
 
 
@@ -22,13 +24,20 @@ export type DestinationChoice = {
 
 
 
+
+
 export type DestinationPreferences = {
 
   person: Person;
 
   countries: DestinationChoice[];
 
+  completed: boolean;
+
 };
+
+
+
 
 
 
@@ -40,17 +49,21 @@ const STORAGE_KEY =
 
 
 
+
+
 export function getDestinationPreferences()
 : DestinationPreferences[] {
 
 
-  if (
+  if(
     typeof window === "undefined"
-  ) {
+  ){
 
     return [];
 
   }
+
+
 
 
 
@@ -61,7 +74,7 @@ export function getDestinationPreferences()
 
 
 
-  if (!saved) {
+  if(!saved){
 
     return [];
 
@@ -69,9 +82,12 @@ export function getDestinationPreferences()
 
 
 
+
   return JSON.parse(saved);
 
+
 }
+
 
 
 
@@ -88,11 +104,13 @@ export function saveDestinationPreferences(
 
 
 
+
   const filtered =
     current.filter(
-      (item) =>
+      item =>
         item.person !== preferences.person
     );
+
 
 
 
@@ -117,6 +135,8 @@ export function saveDestinationPreferences(
 
 
 
+
+
 export function getPersonDestinations(
   person: Person
 ) {
@@ -127,17 +147,53 @@ export function getPersonDestinations(
 
 
 
+
   return (
+
     preferences.find(
-      (item) =>
+      item =>
         item.person === person
     )
     ?.countries
     ||
     []
+
   );
 
+
 }
+
+
+
+
+
+
+
+export function hasCompleted(
+  person: Person
+) {
+
+
+  const preferences =
+    getDestinationPreferences();
+
+
+
+
+  return Boolean(
+
+    preferences.find(
+      item =>
+        item.person === person
+        &&
+        item.completed
+    )
+
+  );
+
+
+}
+
 
 
 
@@ -152,9 +208,10 @@ export function getSharedDestinations() {
 
 
 
+
   const lawrence =
     preferences.find(
-      (item) =>
+      item =>
         item.person === "Lawrence"
     );
 
@@ -162,16 +219,17 @@ export function getSharedDestinations() {
 
   const ciara =
     preferences.find(
-      (item) =>
+      item =>
         item.person === "Ciara"
     );
 
 
 
-  if (
+
+  if(
     !lawrence ||
     !ciara
-  ) {
+  ){
 
     return [];
 
@@ -179,30 +237,132 @@ export function getSharedDestinations() {
 
 
 
+
+
+
   return lawrence.countries
+
     .filter(
-      (country) =>
+      country =>
+
 
         country.answer === "yes"
 
+
         &&
 
+
         ciara.countries.some(
-          (ciaraCountry) =>
+          ciaraCountry =>
+
 
             ciaraCountry.countryId ===
             country.countryId
 
+
             &&
+
 
             ciaraCountry.answer === "yes"
 
+
         )
 
+
     )
+
     .map(
-      (country) =>
+      country =>
         country.countryId
     );
+
+
+}
+
+
+
+
+
+
+
+
+export function getMaybeDestinations() {
+
+
+  const preferences =
+    getDestinationPreferences();
+
+
+
+
+  const lawrence =
+    preferences.find(
+      item =>
+        item.person === "Lawrence"
+    );
+
+
+
+
+  const ciara =
+    preferences.find(
+      item =>
+        item.person === "Ciara"
+    );
+
+
+
+
+  if(
+    !lawrence ||
+    !ciara
+  ){
+
+    return [];
+
+  }
+
+
+
+
+
+
+
+  return lawrence.countries
+
+    .filter(
+      country => {
+
+
+        const ciaraChoice =
+          ciara.countries.find(
+            item =>
+              item.countryId ===
+              country.countryId
+          );
+
+
+
+
+        return (
+
+          country.answer === "yes"
+
+          &&
+
+          ciaraChoice?.answer === "maybe"
+
+        );
+
+
+      }
+
+    )
+
+    .map(
+      country =>
+        country.countryId
+    );
+
 
 }

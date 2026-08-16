@@ -2,223 +2,365 @@ import Link from "next/link";
 
 import { countries } from "@/lib/countries";
 import { cities } from "@/lib/cities";
+import { attractions } from "@/lib/attractions";
+
+import {
+  getDestinationsByCountry,
+} from "@/lib/destinations/destinationDatabase";
 
 import HeroImage from "@/components/Shared/HeroImage";
 import WishlistButton from "@/components/WishlistButton";
+import SharedDestinationBadge from "@/components/Shared/SharedDestinationBadge";
+
 
 
 interface Props {
+
   params: Promise<{
-    countryId: string;
+
+    countryId:string;
+
   }>;
+
 }
 
 
+
+
+
 export default async function CountryPage({
+
   params,
-}: Props) {
+
+}: Props){
+
+
 
   const {
+
     countryId,
+
   } = await params;
 
 
-  const country = countries.find(
-    (item) => item.id === countryId
-  );
 
 
-  const countryCities = cities.filter(
-    (city) => city.countryId === countryId
-  );
+
+  const country =
+
+    countries.find(
+
+      (item)=>
+
+        item.id === countryId
+
+    );
 
 
-  if (!country) {
+
+
+
+  if(!country){
+
     return (
+
       <main
+
         className="
           min-h-screen
           bg-[#07141F]
           p-10
           text-white
         "
+
       >
-        <h1 className="text-4xl">
-          Country not found
-        </h1>
+
+        Country not found
+
       </main>
+
     );
+
   }
 
 
+
+
+
+
+
+  const destinationCities =
+
+    getDestinationsByCountry(
+
+      countryId
+
+    );
+
+
+
+
+
+
+  const existingCities =
+
+    cities.filter(
+
+      (city)=>
+
+        city.countryId === countryId
+
+    );
+
+
+
+
+
+
+  const countryCities =
+
+    destinationCities.length > 0
+
+    ?
+
+    destinationCities
+
+    :
+
+    existingCities;
+
+
+
+
+
+
+
+  const cityIds =
+
+    countryCities.map(
+
+      (city)=>
+
+        city.id
+
+    );
+
+
+
+
+
+
+  const countryAttractions =
+
+    attractions.filter(
+
+      (attraction)=>
+
+        cityIds.includes(
+
+          attraction.cityId
+
+        )
+
+    );
+
+
+
+
+
+
+
+
   return (
+
     <main
+
       className="
         min-h-screen
         bg-[#07141F]
         p-10
         text-white
       "
+
     >
 
+
+
       <div
+
         className="
           mx-auto
           max-w-6xl
         "
+
       >
 
+
+
+
+
         <HeroImage
+
           image={country.image}
+
+          flagImage={`/images/flags/${country.id}.jpg`}
+
           title={`${country.flag} ${country.name}`}
+
           subtitle={`Discover cities, experiences and adventures in ${country.name}`}
+
         />
 
 
-        <div className="mt-6">
-          <WishlistButton
-            id={country.id}
-            name={country.name}
-            type="country"
-            image={country.image}
-          />
-        </div>
+
+
+
+
+        <WishlistButton
+
+          id={country.id}
+
+          name={country.name}
+
+          type="country"
+
+          image={country.image}
+
+        />
+
+
+
+
+
+
+        <SharedDestinationBadge
+
+          countryId={country.id}
+
+          countryName={country.name}
+
+        />
+
+
+
+
 
 
 
         <section
+
           className="
             mt-12
-            grid
-            gap-6
-            md:grid-cols-2
+            rounded-3xl
+            border
+            border-white/10
+            bg-white/5
+            p-8
           "
+
         >
 
-          <div
+
+          <h2
+
             className="
-              rounded-3xl
-              border
-              border-white/10
-              bg-white/5
-              p-6
+              text-4xl
+              font-light
             "
+
           >
 
-            <p
-              className="
-                text-xs
-                uppercase
-                tracking-[0.3em]
-                text-white/40
-              "
-            >
-              Destination
-            </p>
+            Discover {country.name}
 
-
-            <h2
-              className="
-                mt-3
-                text-3xl
-                font-light
-              "
-            >
-              Explore {country.name}
-            </h2>
-
-
-            <p
-              className="
-                mt-4
-                text-white/60
-              "
-            >
-              Discover cities, landmarks and experiences
-              worth visiting together.
-            </p>
-
-          </div>
+          </h2>
 
 
 
-          <div
+          <p
+
             className="
-              rounded-3xl
-              border
-              border-white/10
-              bg-white/5
-              p-6
+              mt-4
+              text-white/60
             "
+
           >
 
-            <p
-              className="
-                text-xs
-                uppercase
-                tracking-[0.3em]
-                text-white/40
-              "
-            >
-              Planning
-            </p>
+            Explore the top destinations,
+            experiences and attractions.
+
+          </p>
 
 
-            <h2
-              className="
-                mt-3
-                text-3xl
-                font-light
-              "
-            >
-              Build your trip
-            </h2>
-
-
-            <p
-              className="
-                mt-4
-                text-white/60
-              "
-            >
-              Save places now and create your itinerary later.
-            </p>
-
-          </div>
 
         </section>
 
 
 
-        <section className="mt-12">
+
+
+
+
+
+        <section
+
+          className="
+            mt-12
+          "
+
+        >
+
+
 
           <div
+
             className="
               flex
-              items-center
               justify-between
+              items-center
             "
+
           >
 
             <h2
+
               className="
                 text-4xl
                 font-light
               "
+
             >
+
               Cities
+
             </h2>
 
 
-            <p className="text-white/40">
+
+            <p
+
+              className="
+                text-white/40
+              "
+
+            >
+
               {countryCities.length} destinations
+
             </p>
+
+
 
           </div>
 
 
 
+
+
+
+
+
           <div
+
             className="
               mt-6
               grid
@@ -226,88 +368,292 @@ export default async function CountryPage({
               md:grid-cols-2
               lg:grid-cols-3
             "
+
           >
 
-            {countryCities.map((city) => (
-
-              <Link
-                key={city.id}
-                href={`/countries/${country.id}/${city.id}`}
-                className="
-                  group
-                  overflow-hidden
-                  rounded-3xl
-                  border
-                  border-white/10
-                  bg-white/5
-                  transition
-                  hover:-translate-y-1
-                  hover:bg-white/10
-                "
-              >
-
-                <img
-                  src={city.image}
-                  alt={city.name}
-                  className="
-                    h-48
-                    w-full
-                    object-cover
-                    transition
-                    duration-300
-                    group-hover:scale-105
-                  "
-                />
 
 
-                <div className="p-6">
+            {
 
-                  <h3
+              countryCities.map(
+
+                (city)=>(
+
+
+                  <Link
+
+                    key={city.id}
+
+                    href={`/countries/${country.id}/${city.id}`}
+
                     className="
-                      text-2xl
-                      font-light
+                      overflow-hidden
+                      rounded-3xl
+                      border
+                      border-white/10
+                      bg-white/5
+                      transition
+                      hover:bg-white/10
                     "
+
                   >
-                    {city.name}
-                  </h3>
 
 
-                  <p
-                    className="
-                      mt-3
-                      text-sm
-                      text-white/60
-                    "
-                  >
-                    {city.description}
-                  </p>
 
 
-                  <div
-                    className="
-                      mt-4
-                      text-sm
-                      text-white/40
-                    "
-                  >
-                    {city.budget} • {city.season}
-                  </div>
+                    {
+
+                      city.image &&
+
+                      <img
+
+                        src={city.image}
+
+                        alt={city.name}
+
+                        className="
+                          h-48
+                          w-full
+                          object-cover
+                        "
+
+                      />
+
+                    }
 
 
-                </div>
 
-              </Link>
 
-            ))}
+
+
+                    <div
+
+                      className="
+                        p-6
+                      "
+
+                    >
+
+
+
+                      <h3
+
+                        className="
+                          text-2xl
+                          font-light
+                        "
+
+                      >
+
+                        {city.name}
+
+                      </h3>
+
+
+
+
+
+                      <p
+
+                        className="
+                          mt-3
+                          text-white/60
+                        "
+
+                      >
+
+                        {city.description}
+
+                      </p>
+
+
+
+
+
+                    </div>
+
+
+
+
+                  </Link>
+
+
+                )
+
+              )
+
+            }
+
+
 
           </div>
+
+
 
 
         </section>
 
 
+
+
+
+
+
+
+        {
+
+          countryAttractions.length > 0 &&
+
+
+          <section
+
+            className="
+              mt-16
+            "
+
+          >
+
+
+
+            <h2
+
+              className="
+                text-4xl
+                font-light
+              "
+
+            >
+
+              ⭐ Experiences & Attractions
+
+            </h2>
+
+
+
+
+
+            <div
+
+              className="
+                mt-6
+                grid
+                gap-6
+                md:grid-cols-2
+                lg:grid-cols-3
+              "
+
+            >
+
+
+
+              {
+
+                countryAttractions.map(
+
+                  (attraction)=>(
+
+
+                    <Link
+
+                      key={attraction.id}
+
+                      href={`/countries/${country.id}/${attraction.cityId}/${attraction.id}`}
+
+                      className="
+                        rounded-3xl
+                        border
+                        border-white/10
+                        bg-white/5
+                        overflow-hidden
+                      "
+
+                    >
+
+
+                      <img
+
+                        src={attraction.image}
+
+                        alt={attraction.name}
+
+                        className="
+                          h-48
+                          w-full
+                          object-cover
+                        "
+
+                      />
+
+
+
+                      <div
+
+                        className="
+                          p-6
+                        "
+
+                      >
+
+                        <h3
+
+                          className="
+                            text-xl
+                            font-light
+                          "
+
+                        >
+
+                          {attraction.name}
+
+                        </h3>
+
+
+                        <p
+
+                          className="
+                            mt-3
+                            text-white/60
+                          "
+
+                        >
+
+                          {attraction.description}
+
+                        </p>
+
+
+                      </div>
+
+
+
+                    </Link>
+
+
+                  )
+
+                )
+
+              }
+
+
+
+            </div>
+
+
+
+          </section>
+
+
+        }
+
+
+
       </div>
 
+
+
     </main>
+
   );
+
 }

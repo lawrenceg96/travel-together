@@ -149,7 +149,6 @@ export default function DestinationsPage() {
     else {
 
 
-
       if(person){
 
         saveDestinationPreferences({
@@ -158,6 +157,9 @@ export default function DestinationsPage() {
 
           countries:
             updatedAnswers,
+
+          completed:
+            true,
 
         });
 

@@ -2,326 +2,28 @@
 
 import {
   useEffect,
+  useMemo,
   useState,
 } from "react";
-
 
 import {
   getSharedCountries,
   getMaybeCountries,
-  getRejectedCountries,
 } from "@/lib/destinationComparison";
-
 
 import {
   countries,
 } from "@/lib/countries";
 
+import {
+  countryContinents,
+} from "@/lib/countryContinents";
 
 import SharedStats from "@/components/SharedWorld/SharedStats";
 
-
 import InteractiveSharedMap from "@/components/SharedWorld/InteractiveSharedMap";
 
-
-
-
-
-function getCountry(id:string){
-
-  return countries.find(
-    (country)=>
-      country.id === id
-  );
-
-}
-
-
-
-
-
-function CountryCard({
-
-  id,
-
-  type,
-
-}:{
-
-  id:string;
-
-  type:
-    | "shared"
-    | "maybe"
-    | "rejected";
-
-}){
-
-
-  const country =
-    getCountry(id);
-
-
-
-  if(!country){
-
-    return null;
-
-  }
-
-
-
-  return (
-
-    <div
-      className={`
-        rounded-3xl
-        border
-        p-6
-        transition
-        hover:scale-105
-
-        ${
-          type === "shared"
-
-          ?
-
-          `
-          border-[#2E6F57]
-          bg-[#2E6F57]/20
-          `
-
-          :
-
-          `
-          border-white/10
-          bg-white/5
-          `
-
-        }
-
-      `}
-    >
-
-
-      <div
-        className="
-          text-5xl
-        "
-      >
-
-        {country.flag}
-
-      </div>
-
-
-
-      <h3
-        className="
-          mt-4
-          text-2xl
-          font-light
-        "
-      >
-
-        {country.name}
-
-      </h3>
-
-
-
-
-      {
-        type === "shared" && (
-
-          <p
-            className="
-              mt-3
-              text-[#8dd8ae]
-            "
-          >
-
-            ❤️ Both chose this
-
-          </p>
-
-        )
-      }
-
-
-
-
-
-      {
-        type === "maybe" && (
-
-          <p
-            className="
-              mt-3
-              text-white/50
-            "
-          >
-
-            💭 Maybe Later
-
-          </p>
-
-        )
-      }
-
-
-
-
-
-      {
-        type === "rejected" && (
-
-          <p
-            className="
-              mt-3
-              text-white/30
-            "
-          >
-
-            🚫 Not For Now
-
-          </p>
-
-        )
-      }
-
-
-    </div>
-
-  );
-
-}
-
-
-
-
-
-
-
-function Section({
-
-  title,
-
-  description,
-
-  items,
-
-  type,
-
-}:{
-
-  title:string;
-
-  description:string;
-
-  items:string[];
-
-  type:
-    | "shared"
-    | "maybe"
-    | "rejected";
-
-}){
-
-
-  return (
-
-    <section
-      className="
-        mt-16
-      "
-    >
-
-
-      <h2
-        className="
-          text-4xl
-          font-light
-        "
-      >
-
-        {title}
-
-      </h2>
-
-
-
-      <p
-        className="
-          mt-3
-          text-white/50
-        "
-      >
-
-        {description}
-
-      </p>
-
-
-
-
-      <div
-        className="
-          mt-8
-          grid
-          gap-6
-          md:grid-cols-4
-        "
-      >
-
-
-        {
-          items.length === 0
-
-          ?
-
-          <p
-            className="
-              text-white/40
-            "
-          >
-            None yet
-          </p>
-
-
-          :
-
-
-          items.map(
-            (id)=>(
-
-              <CountryCard
-
-                key={id}
-
-                id={id}
-
-                type={type}
-
-              />
-
-            )
-
-          )
-
-        }
-
-
-      </div>
-
-
-    </section>
-
-  );
-
-}
-
-
+import ContinentTile from "@/components/SharedWorld/ContinentTile";
 
 
 
@@ -331,10 +33,8 @@ function Section({
 export default function SharedWorldPage(){
 
 
-  const [
-    mounted,
-    setMounted
-  ] = useState(false);
+  const [mounted,setMounted] =
+    useState(false);
 
 
 
@@ -343,16 +43,6 @@ export default function SharedWorldPage(){
     setMounted(true);
 
   },[]);
-
-
-
-
-  if(!mounted){
-
-    return null;
-
-  }
-
 
 
 
@@ -367,8 +57,80 @@ export default function SharedWorldPage(){
 
 
 
-  const rejected =
-    getRejectedCountries();
+
+
+  const continentGroups =
+    useMemo(()=>{
+
+
+      const grouped:
+      Record<string, typeof countries> = {};
+
+
+
+      shared.forEach(id=>{
+
+
+        const country =
+          countries.find(
+            item =>
+              item.id === id
+          );
+
+
+
+        if(!country){
+          return;
+        }
+
+
+
+        const continent =
+          countryContinents[
+            country.id
+          ];
+
+
+
+        if(!continent){
+          return;
+        }
+
+
+
+        if(!grouped[continent]){
+
+          grouped[continent] = [];
+
+        }
+
+
+
+        grouped[continent].push(
+          country
+        );
+
+
+      });
+
+
+
+      return grouped;
+
+
+
+    },[shared]);
+
+
+
+
+
+  if(!mounted){
+
+    return null;
+
+  }
+
 
 
 
@@ -403,7 +165,7 @@ export default function SharedWorldPage(){
           "
         >
 
-          🌍 Our Shared World
+          🌍 Your World Together
 
         </h1>
 
@@ -417,87 +179,96 @@ export default function SharedWorldPage(){
           "
         >
 
-          Your journey together starts here.
+          The destinations you both discovered.
 
         </p>
 
 
 
 
+        <div
+          className="
+            mt-10
+          "
+        >
+
+          <SharedStats
+
+            sharedCount={
+              shared.length
+            }
+
+            maybeCount={
+              maybe.length
+            }
+
+          />
+
+        </div>
 
 
-        <SharedStats
 
-          sharedCount={
-            shared.length
+
+
+
+        <div className="mt-10">
+
+          <InteractiveSharedMap />
+
+        </div>
+
+
+
+
+
+
+        <section
+          className="
+            mt-12
+            grid
+            gap-6
+            md:grid-cols-2
+            xl:grid-cols-3
+          "
+        >
+
+
+          {
+            Object.entries(
+              continentGroups
+            )
+            .map(
+              ([
+                continent,
+                continentCountries
+              ])=>(
+
+
+                <ContinentTile
+
+                  key={continent}
+
+                  continent={continent}
+
+                  countries={
+                    continentCountries
+                  }
+
+                />
+
+
+              )
+
+            )
+
           }
 
-          maybeCount={
-            maybe.length
-          }
 
-        />
+
+        </section>
 
 
 
-
-
-
-        <InteractiveSharedMap />
-
-
-
-
-
-
-
-        <Section
-
-          title="❤️ Shared Destinations"
-
-          description="Places you both want to experience."
-
-          items={shared}
-
-          type="shared"
-
-        />
-
-
-
-
-
-
-
-        <Section
-
-          title="💭 Maybe Later"
-
-          description="Ideas worth keeping for the future."
-
-          items={maybe}
-
-          type="maybe"
-
-        />
-
-
-
-
-
-
-
-        <Section
-
-          title="🚫 Not For Now"
-
-          description="Places neither of you selected."
-
-          items={rejected}
-
-          type="rejected"
-
-        />
 
 
 
@@ -507,5 +278,6 @@ export default function SharedWorldPage(){
     </main>
 
   );
+
 
 }

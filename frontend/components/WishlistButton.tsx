@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import {
   addToWishlist,
   getWishlist,
+  removeFromWishlist,
 } from "@/lib/wishlist";
 
 
@@ -18,6 +20,7 @@ interface Props {
 }
 
 
+
 export default function WishlistButton({
   id,
   name,
@@ -25,45 +28,133 @@ export default function WishlistButton({
   image,
 }: Props) {
 
-  const [saved, setSaved] =
-    useState(() =>
+
+  const [
+    saved,
+    setSaved
+  ] = useState(false);
+
+
+
+  const [
+    loaded,
+    setLoaded
+  ] = useState(false);
+
+
+
+
+
+  useEffect(() => {
+
+
+    const exists =
       getWishlist().some(
         (item) =>
           item.id === id &&
           item.type === type
-      )
-    );
+      );
 
 
-  function toggleWishlist() {
+
+    setSaved(exists);
+
+    setLoaded(true);
+
+
+
+  }, [id, type]);
+
+
+
+
+
+
+
+  function toggleWishlist(){
+
+
+    if(saved){
+
+
+      removeFromWishlist(
+        id,
+        type
+      );
+
+
+      setSaved(false);
+
+
+      return;
+
+    }
+
+
+
+
 
     addToWishlist({
+
       id,
+
       name,
+
       type,
+
       image,
+
     });
 
 
+
     setSaved(true);
+
+
   }
 
 
+
+
+
+
+
   return (
+
     <button
+
       onClick={toggleWishlist}
+
+      disabled={!loaded}
+
       className="
         rounded-full
         border
         border-white/20
-        bg-white/10
         px-6
         py-3
+        text-sm
+        text-white/80
         transition
-        hover:bg-white/20
+        hover:bg-white/10
+        disabled:opacity-50
       "
+
     >
-      {saved ? "❤️ Saved" : "🤍 Save"}
+
+      {
+        loaded
+          ? (
+              saved
+                ? "❤️ Saved"
+                : "🤍 Save"
+            )
+          : "Save"
+      }
+
+
     </button>
+
   );
+
 }
