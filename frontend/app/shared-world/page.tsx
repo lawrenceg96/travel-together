@@ -1,25 +1,47 @@
 "use client";
 
+
 import {
   useEffect,
   useMemo,
   useState,
 } from "react";
 
+
 import {
   getSharedCountries,
   getMaybeCountries,
 } from "@/lib/destinationComparison";
 
+
 import {
   countries,
 } from "@/lib/countries";
+
+
+import {
+  cities,
+} from "@/lib/cities";
+
 
 import {
   countryContinents,
 } from "@/lib/countryContinents";
 
+
+import {
+  getTopCityMatches,
+} from "@/lib/travelDNAMatching";
+
+
+import {
+  travelExperiences,
+} from "@/lib/travelExperiences";
+
+
 import SharedStats from "@/components/SharedWorld/SharedStats";
+
+import SharedDNACard from "@/components/SharedWorld/SharedDNACard";
 
 import InteractiveSharedMap from "@/components/SharedWorld/InteractiveSharedMap";
 
@@ -33,8 +55,11 @@ import ContinentTile from "@/components/SharedWorld/ContinentTile";
 export default function SharedWorldPage(){
 
 
-  const [mounted,setMounted] =
-    useState(false);
+  const [
+    mounted,
+    setMounted
+  ] = useState(false);
+
 
 
 
@@ -43,6 +68,8 @@ export default function SharedWorldPage(){
     setMounted(true);
 
   },[]);
+
+
 
 
 
@@ -59,7 +86,18 @@ export default function SharedWorldPage(){
 
 
 
+  const cityMatches =
+    getTopCityMatches();
+
+
+
+
+
+
+
+
   const continentGroups =
+
     useMemo(()=>{
 
 
@@ -72,20 +110,28 @@ export default function SharedWorldPage(){
 
 
         const country =
+
           countries.find(
+
             item =>
+
               item.id === id
+
           );
 
 
 
         if(!country){
+
           return;
+
         }
 
 
 
+
         const continent =
+
           countryContinents[
             country.id
           ];
@@ -93,8 +139,11 @@ export default function SharedWorldPage(){
 
 
         if(!continent){
+
           return;
+
         }
+
 
 
 
@@ -106,9 +155,7 @@ export default function SharedWorldPage(){
 
 
 
-        grouped[continent].push(
-          country
-        );
+        grouped[continent].push(country);
 
 
       });
@@ -118,8 +165,10 @@ export default function SharedWorldPage(){
       return grouped;
 
 
-
     },[shared]);
+
+
+
 
 
 
@@ -137,32 +186,39 @@ export default function SharedWorldPage(){
 
 
 
+
   return (
 
     <main
+
       className="
         min-h-screen
         bg-[#07141F]
         p-10
         text-white
       "
+
     >
 
 
       <div
+
         className="
           mx-auto
           max-w-7xl
         "
+
       >
 
 
 
         <h1
+
           className="
             text-6xl
             font-light
           "
+
         >
 
           🌍 Your World Together
@@ -171,26 +227,30 @@ export default function SharedWorldPage(){
 
 
 
+
         <p
+
           className="
             mt-5
             text-xl
             text-white/50
           "
+
         >
 
-          The destinations you both discovered.
+          The destinations and experiences you discovered together.
 
         </p>
 
 
 
 
-        <div
-          className="
-            mt-10
-          "
-        >
+
+
+
+
+        <div className="mt-10">
+
 
           <SharedStats
 
@@ -204,7 +264,366 @@ export default function SharedWorldPage(){
 
           />
 
+
         </div>
+
+
+
+
+
+
+
+
+        <SharedDNACard />
+
+
+
+
+
+
+
+
+
+        {
+          cityMatches.length > 0 &&
+
+
+          <section
+
+            className="
+              mt-12
+              rounded-3xl
+              border
+              border-white/10
+              bg-white/5
+              p-8
+            "
+
+          >
+
+
+            <p
+
+              className="
+                text-xs
+                uppercase
+                tracking-[0.3em]
+                text-white/40
+              "
+
+            >
+
+              Travel DNA Matches
+
+            </p>
+
+
+
+
+
+            <h2
+
+              className="
+                mt-3
+                text-4xl
+                font-light
+              "
+
+            >
+
+              Places you might love together
+
+            </h2>
+
+
+
+
+
+
+
+            <div
+
+              className="
+                mt-8
+                grid
+                gap-6
+                md:grid-cols-2
+                lg:grid-cols-3
+              "
+
+            >
+
+
+
+              {
+
+                cityMatches.map(
+
+                  (match)=>(
+
+
+                    (()=>{
+
+
+                      const city =
+
+                        cities.find(
+
+                          item =>
+
+                            item.id === match.cityId
+
+                        );
+
+
+
+                      const country =
+
+                        countries.find(
+
+                          item =>
+
+                            item.id === match.countryId
+
+                        );
+
+
+
+
+                      if(!city){
+
+                        return null;
+
+                      }
+
+
+
+
+                      return (
+
+                        <div
+
+                          key={match.cityId}
+
+                          className="
+                            overflow-hidden
+                            rounded-3xl
+                            border
+                            border-white/10
+                            bg-white/5
+                          "
+
+                        >
+
+
+
+                          <img
+
+                            src={city.image}
+
+                            alt={city.name}
+
+                            className="
+                              h-48
+                              w-full
+                              object-cover
+                            "
+
+                          />
+
+
+
+
+
+                          <div className="p-6">
+
+
+                            <p
+
+                              className="
+                                text-xs
+                                uppercase
+                                tracking-[0.3em]
+                                text-white/40
+                              "
+
+                            >
+
+                              {country?.name}
+
+                            </p>
+
+
+
+
+                            <h3
+
+                              className="
+                                mt-3
+                                text-3xl
+                                font-light
+                              "
+
+                            >
+
+                              {city.name}
+
+                            </h3>
+
+
+
+
+
+                            <p
+
+                              className="
+                                mt-3
+                                text-white/60
+                              "
+
+                            >
+
+                              {city.description}
+
+                            </p>
+
+
+
+
+
+                            <p
+
+                              className="
+                                mt-5
+                                text-sm
+                                text-white/40
+                              "
+
+                            >
+
+                              ❤️ {match.score} shared experiences
+
+                            </p>
+
+
+
+
+
+
+                            <div
+
+                              className="
+                                mt-4
+                                flex
+                                flex-wrap
+                                gap-2
+                              "
+
+                            >
+
+
+                              {
+
+                                match.matchedExperiences.map(
+
+                                  (experienceId)=>(
+
+
+                                    (()=>{
+
+
+                                      const experience =
+
+                                        travelExperiences.find(
+
+                                          item =>
+
+                                            item.id === experienceId
+
+                                        );
+
+
+
+                                      if(!experience){
+
+                                        return null;
+
+                                      }
+
+
+
+
+                                      return (
+
+                                        <span
+
+                                          key={experienceId}
+
+                                          className="
+                                            rounded-full
+                                            border
+                                            border-white/10
+                                            bg-white/5
+                                            px-3
+                                            py-1
+                                            text-xs
+                                            text-white/70
+                                          "
+
+                                        >
+
+                                          {experience.name}
+
+                                        </span>
+
+                                      );
+
+
+                                    })()
+
+
+                                  )
+
+                                )
+
+                              }
+
+
+                            </div>
+
+
+
+
+
+                          </div>
+
+
+                        </div>
+
+                      );
+
+
+                    })()
+
+
+                  )
+
+                )
+
+              }
+
+
+            </div>
+
+
+
+          </section>
+
+
+        }
+
+
+
 
 
 
@@ -213,7 +632,9 @@ export default function SharedWorldPage(){
 
         <div className="mt-10">
 
+
           <InteractiveSharedMap />
+
 
         </div>
 
@@ -222,7 +643,11 @@ export default function SharedWorldPage(){
 
 
 
+
+
+
         <section
+
           className="
             mt-12
             grid
@@ -230,18 +655,20 @@ export default function SharedWorldPage(){
             md:grid-cols-2
             xl:grid-cols-3
           "
+
         >
 
 
+
           {
+
             Object.entries(
               continentGroups
             )
+
             .map(
-              ([
-                continent,
-                continentCountries
-              ])=>(
+
+              ([continent, continentCountries])=>(
 
 
                 <ContinentTile
@@ -250,9 +677,7 @@ export default function SharedWorldPage(){
 
                   continent={continent}
 
-                  countries={
-                    continentCountries
-                  }
+                  countries={continentCountries}
 
                 />
 
@@ -260,6 +685,7 @@ export default function SharedWorldPage(){
               )
 
             )
+
 
           }
 
@@ -271,11 +697,11 @@ export default function SharedWorldPage(){
 
 
 
-
       </div>
 
 
     </main>
+
 
   );
 

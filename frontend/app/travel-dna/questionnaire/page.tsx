@@ -308,21 +308,16 @@ export default function TravelDNAQuestionnaire(){
   ){
 
 
-    const response: TravelDNAResponse = {
+  const response: TravelDNAResponse = {
 
+    person: person as Planner,
 
-      person,
+    experienceId:
+      question.id,
 
+  answer,
 
-      experienceId:
-
-        question.id,
-
-
-      answer,
-
-
-    };
+};
 
 
 
